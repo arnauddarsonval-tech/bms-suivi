@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=ea66d95d-eec0-4d4e-a239-82d6967ddad3
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=ea66d95d-eec0-4d4e-a239-82d6967ddad3">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendrier des arrivages produits — BoostMyShop myFulfillment</title>
+<style>
+  :root{
+    --green:#2e7d32; --green-dark:#1b5e20; --green-light:#e8f5e9;
+    --ink:#1f2933; --muted:#6b7280; --line:#e5e7eb; --bg:#f6f7f5; --card:#ffffff;
+    --accent:#f59e0b; --danger:#c0392b;
+    /* teintes pastel par groupe d'onglets : approvisionnement (bleu), commandes clients (violet), plants (sarcelle) */
+    --supply:#3b82f6; --supply-light:#eaf2ff; --supply-dark:#1d4ed8;
+    --clientc:#8b5cf6; --clientc-light:#f3f0fe; --clientc-dark:#6d28d9;
+    --plantc:#0d9488; --plantc-light:#e6f7f5; --plantc-dark:#0f766e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  header.top{background:var(--green-dark);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  header.top h1{font-size:17px;margin:0;font-weight:600;display:flex;align-items:center;gap:10px}
+  header.top .sub{font-size:12px;opacity:.8;font-weight:400}
+  .leaf{font-size:20px}
+  .wrap{max-width:1500px;margin:0 auto;padding:22px}
+  .login{max-width:440px;margin:8vh auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+  .login h2{margin:0 0 4px;font-size:18px}
+  .login p.hint{margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.5}
+  label{display:block;font-weight:600;margin:14px 0 6px;font-size:13px}
+  input[type=text],input[type=password]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+  input:focus{outline:none;border-color:var(--green)}
+  .chk{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}
+  .chk input{width:auto}
+  button{cursor:pointer;font-family:inherit}
+  .btn{background:var(--green);color:#fff;border:none;padding:11px 18px;border-radius:8px;font-size:14px;font-weight:600;width:100%;margin-top:20px}
+  .btn:hover{background:var(--green-dark)}
+  .btn.small{width:auto;padding:8px 14px;font-size:13px;margin:0}
+  .btn.ghost{background:#fff;color:var(--green-dark);border:1px solid var(--green)}
+  .btn.ghost:hover{background:var(--green-light)}
+  .err{background:#fdecea;color:var(--danger);border:1px solid #f5c6cb;padding:10px 12px;border-radius:8px;margin-top:16px;font-size:13px;display:none}
+  .lock{font-size:12px;color:var(--muted);margin-top:18px;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .kpi .v{font-size:26px;font-weight:700;color:var(--green-dark)}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .toolbar input[type=text],.toolbar select{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
+  .toolbar .search{min-width:220px;flex:1}
+  .toolbar label.inline{display:flex;align-items:center;gap:6px;margin:0;font-weight:400;color:var(--muted);font-size:13px}
+  .toolbar label.inline input{width:auto}
+  .spacer{flex:1}
+  .count{color:var(--muted);font-size:13px}
+  .tablecard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:68vh}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{position:sticky;top:0;background:var(--green-light);color:var(--green-dark);font-weight:600;cursor:pointer;user-select:none;z-index:1}
+  th:hover{background:#d7ecd8}
+  th .arrow{font-size:10px;opacity:.6;margin-left:4px}
+  tbody tr:hover{background:#fafdfa}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  td.tog{cursor:pointer;font-weight:700;color:var(--green-dark);width:36px;text-align:center;user-select:none;font-size:16px}
+  tr.grp{cursor:pointer}
+  tr.grp:hover{background:#f0f7f0}
+  tr.grp.open{background:#eef6ee}
+  tr.grp td{font-weight:500}
+  td.sumcell{white-space:normal;max-width:340px;color:var(--muted);font-weight:400!important;font-size:12.5px;line-height:1.35}
+  tr.det>td{background:#fbfdfb;padding:0}
+  .sub-wrap{padding:4px 6px 12px 44px}
+  table.sub{width:auto;min-width:60%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  table.sub th,table.sub td{padding:7px 14px;border-bottom:1px solid var(--line);font-size:12.5px;white-space:nowrap;text-align:left}
+  table.sub th{position:static;background:#eef3ee;color:var(--muted);font-weight:600;cursor:default}
+  table.sub td.num,table.sub th[style]{text-align:right}
+  table.sub tr:last-child td{border-bottom:none}
+  .empty{padding:50px;text-align:center;color:var(--muted)}
+  .loading{padding:60px;text-align:center;color:var(--muted)}
+  .spinner{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hidden{display:none!important}
+  .foot{color:var(--muted);font-size:12px;margin-top:14px;text-align:center}
+  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin-bottom:18px}
+  .tab{background:none;border:none;padding:10px 18px;font-size:14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:8px 8px 0 0}
+  .tab:hover{color:var(--green-dark);background:var(--green-light)}
+  .tab.active{color:var(--green-dark);border-bottom-color:var(--green)}
+  /* teintes pastel par groupe (le tableau de bord garde la couleur par défaut de l'appli) */
+  .tab[data-group="supply"]:hover{color:var(--supply-dark);background:var(--supply-light)}
+  .tab[data-group="supply"].active{color:var(--supply-dark);border-bottom-color:var(--supply)}
+  .tab[data-group="clients"]:hover{color:var(--clientc-dark);background:var(--clientc-light)}
+  .tab[data-group="clients"].active{color:var(--clientc-dark);border-bottom-color:var(--clientc)}
+  .tab[data-group="plants"]:hover{color:var(--plantc-dark);background:var(--plantc-light)}
+  .tab[data-group="plants"].active{color:var(--plantc-dark);border-bottom-color:var(--plantc)}
+  #tab-reception,#tab-receptions,#tab-fabrication{border-top:3px solid var(--supply);padding-top:16px;border-radius:3px}
+  #tab-clients{border-top:3px solid var(--clientc);padding-top:16px;border-radius:3px}
+  #tab-plants{border-top:3px solid var(--plantc);padding-top:16px;border-radius:3px}
+  .card-search{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:20px}
+  .card-search h3{margin:0 0 12px;font-size:15px}
+  .trk{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green-dark);padding:5px 11px;border-radius:20px;font-size:12.5px;margin:4px 5px 0 0;text-decoration:none;font-weight:600}
+  .trk:hover{background:#d7ecd8}
+  .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+  .pill.ok{background:#e8f5e9;color:#1b5e20}
+  .pill.no{background:#fff3e0;color:#b45309}
+  .pill.mid{background:#fff8e1;color:#8a6d00}
+  td.old{color:var(--danger);font-weight:700}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:6px}
+  .hcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .hc-t{font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:10px}
+  .hc-big{font-size:26px;font-weight:700;color:var(--ink);line-height:1.1}
+  .hc-sub{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.45}
+  .stock-row{padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;border-radius:6px}
+  .stock-row:last-child{border-bottom:none}
+  .stock-row:hover{background:#f0f7f0}
+  tr.clickable{cursor:pointer}
+  tr.clickable:hover{background:#f0f7f0}
+  .miss{font-size:12.5px;color:var(--danger);margin-top:3px}
+  .home2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:22px}
+  .sumcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;cursor:pointer;transition:box-shadow .15s,border-color .15s,transform .15s}
+  .sumcard:hover{box-shadow:0 6px 18px rgba(0,0,0,.08);border-color:var(--green);transform:translateY(-2px)}
+  .sc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .sc-ic{font-size:18px}
+  .sc-title{font-size:12.5px;font-weight:700;color:var(--green-dark);text-transform:uppercase;letter-spacing:.02em}
+  .sc-big{font-size:32px;font-weight:800;color:var(--ink);line-height:1}
+  .sc-sub{color:var(--muted);font-size:12.5px;margin-top:8px;line-height:1.45;min-height:34px}
+  .sc-cta{margin-top:12px;font-size:12.5px;font-weight:700;color:var(--green)}
+  .sumcard:hover .sc-cta{text-decoration:underline}
+  .mini{padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .mini:last-child{border-bottom:none}
+  .mini .d{color:var(--muted);font-size:12px}
+  .mini .n{font-weight:600;color:var(--ink);margin-top:1px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN VIEW -->
+<div id="loginView">
+  <div class="login">
+    <h2>🌱 Calendrier des arrivages produits</h2>
+    <p class="hint">Ferme de Sainte Marthe — connexion à BoostMyShop myFulfillment. Vos identifiants restent dans votre navigateur et ne sont envoyés qu'au serveur BMS.</p>
+    <label for="server">Serveur API</label>
+    <input type="text" id="server" value="https://us1.myfulfillment.boostmyshop.com/api">
+    <label for="username">Utilisateur API</label>
+    <input type="text" id="username" value="api@fermedesaintemarthe.com" autocomplete="username">
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" placeholder="Mot de passe de l'utilisateur API" autocomplete="current-password">
+    <div class="chk"><input type="checkbox" id="remember" checked><label for="remember" style="margin:0;font-weight:400">Retenir le serveur et l'utilisateur (jamais le mot de passe)</label></div>
+    <button class="btn" id="loginBtn">Se connecter et charger les attendus</button>
+    <div class="err" id="loginErr"></div>
+    <div class="lock">🔒 <span>Le mot de passe n'est ni stocké ni transmis à quiconque d'autre que le serveur BoostMyShop. Fichier 100&nbsp;% local.</span></div>
+  </div>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div id="dashView" class="hidden">
+  <header class="top">
+    <h1><span class="leaf">🌱</span> Calendrier des arrivages produits <span class="sub" id="lastUpdate"></span></h1>
+    <div style="display:flex;gap:8px">
+      <button class="btn small ghost" id="refreshBtn">↻ Actualiser</button>
+      <button class="btn small ghost" id="exportBtn">⭳ Export CSV</button>
+      <button class="btn small ghost" id="diagBtn">🔧 Diagnostic</button>
+      <button class="btn small ghost" id="logoutBtn">Déconnexion</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="tabs" id="tabsBar" style="display:none">
+      <button class="tab active" data-tab="home" id="tabBtnHome">🏠 Tableau de bord</button>
+      <button class="tab" data-tab="reception" data-group="supply" id="tabBtnReception">📦 Commandes fournisseurs en cours</button>
+      <button class="tab" data-tab="receptions" data-group="supply" id="tabBtnReceptions">📥 Réceptions ok</button>
+      <button class="tab" data-tab="fabrication" data-group="supply" id="tabBtnFabrication">🏭 Fabrication Sachets</button>
+      <button class="tab" data-tab="clients" data-group="clients" id="tabBtnClients">🚚 Info commandes Clients</button>
+      <button class="tab" data-tab="plants" data-group="plants" id="tabBtnPlants">🌱 Plants Disponibles</button>
+    </div>
+
+    <div id="loadingBox" class="loading"><div class="spinner"></div><span id="loadingMsg">Chargement des données depuis BoostMyShop…</span></div>
+
+    <!-- Diagnostic global (tous onglets) -->
+    <div id="diagPanel" class="hidden" style="background:#0f172a;color:#cbd5e1;border-radius:10px;padding:14px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong style="color:#fff">Diagnostic — structure des données</strong>
+        <span><button class="btn small" id="copyDiag" style="margin-right:6px">Copier</button><button class="btn small ghost" id="closeDiag">Fermer</button></span>
+      </div>
+      <textarea id="diagText" readonly style="width:100%;height:230px;background:#0b1220;color:#9fe8b0;border:1px solid #1e293b;border-radius:8px;font-family:monospace;font-size:12px;padding:10px"></textarea>
+      <div style="color:#94a3b8;font-size:12px;margin-top:6px">Copiez ce texte et envoyez-le moi : j'ajuste la détection (fournisseurs, statuts de commandes…) à votre structure exacte.</div>
+    </div>
+
+    <!-- TAB TABLEAU DE BORD -->
+    <div id="tab-home" class="hidden">
+      <div class="sumgrid" id="homeSumGrid"></div>
+      <div class="home2">
+        <div class="hcard"><div class="hc-t">📦 Prochains arrivages (30 j)</div><div id="homeUpcoming"></div></div>
+        <div class="hcard"><div class="hc-t">📥 Dernières réceptions (3 sem.)</div><div id="homeRecent"></div></div>
+      </div>
+      <div class="card-search">
+        <h3>🔎 Suivi d'une commande</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" id="homeOrderSearch" placeholder="Référence de la commande (ex : 100012345)" style="flex:1;min-width:240px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px">
+          <button class="btn small" id="homeOrderSearchBtn" style="margin:0">Rechercher</button>
+        </div>
+        <div id="homeOrderResult" style="margin-top:14px"></div>
+      </div>
+      <div class="hcard">
+        <div class="hc-t">⚠️ Commandes en rupture / partiellement livrables</div>
+        <div id="homeStock"></div>
+      </div>
+    </div>
+
+    <!-- TAB ATTENDUS -->
+    <div id="tab-reception" class="hidden">
+    <div id="content" class="hidden">
+      <div id="warnBox" class="err hidden" style="background:#fff8e1;color:#8a6d00;border-color:#ffe082;max-width:100%"></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="toolbar">
+        <input type="text" class="search" id="search" placeholder="🔍 Rechercher (SKU, produit, fournisseur…)">
+        <select id="statusFilter" class="hidden"></select>
+        <select id="supplierFilter" class="hidden"></select>
+        <select id="natureFilter">
+          <option value="">Toutes natures</option>
+          <option value="semences">🌱 Semences</option>
+          <option value="hors">📦 Hors semences</option>
+        </select>
+        <label class="inline"><input type="checkbox" id="showIds"> Colonnes techniques (id)</label>
+        <div class="spacer"></div>
+        <span class="count" id="rowCount"></span>
+      </div>
+      <div class="tablecard">
+        <table id="dataTable">
+          <thead><tr id="theadRow"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div id="emptyBox" class="empty hidden">Aucun attendu de réception trouvé pour ce filtre.</div>
+      </div>
+      <div class="foot">Données BoostMyShop myFulfillment · endpoint <code>/supplier/purchase-orders/items/expected</code> · noms fournisseurs via <code>/supplier/suppliers</code></div>
+    </div>
+    </div><!-- /tab-reception -->
+
+    <!-- TAB RÉCEPTIONS -->
+    <div id="tab-receptions" class="hidden">
+      <div class="kpis" id="recKpis"></div>
+      <div class="toolbar">
+        <input type="text" class="search" id="recSearch" placeholder="🔍 Rechercher (SKU, produit, fournisseur…)">
+        <select id="recPeriod">
+          <option value="21">3 dernières semaines</option>
+          <option value="30">30 derniers jours</option>
+          <option value="90">3 derniers mois</option>
+          <option value="0">Tout l'historique chargé</option>
+        </select>
+        <select id="recSupplierFilter" class="hidden"></select>
+        <select id="recNatureFilter">
+          <option value="">Toutes natures</option>
+          <option value="semences">🌱 Semences</option>
+          <option value="hors">📦 Hors semences</option>
+        </select>
+        <div class="spacer"></div>
+        <span class="count" id="recCount"></span>
+      </div>
+      <div class="tablecard">
+        <table id="recTable"><thead><tr id="recThead"></tr></thead><tbody id="recTbody"></tbody></table>
+        <div id="recEmpty" class="empty hidden">Aucune réception sur la période sélectionnée.</div>
+      </div>
+      <div class="foot">Réceptions déduites des commandes fournisseurs (lignes avec quantité reçue) · date = dernière mise à jour de la commande · « ⏳ Partielle » = il reste des lignes non reçues sur cette même commande (voir « Reste à recevoir » en dépliant la ligne) · « ✅ Complète » = plus rien en attente pour cette commande</div>
+    </div>
+
+    <!-- TAB FABRICATION (endpoint REST BMS /v2/manufacturing, ouvert par BoostMyShop nov. 2026 — chargement 100% auto comme les autres onglets) -->
+    <div id="tab-fabrication" class="hidden">
+      <div class="hcard">
+        <div class="hc-t">🏭 Ordres de fabrication</div>
+        <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <a class="btn small ghost" style="display:inline-block;text-decoration:none;text-align:center"
+             href="https://us1.erp.boostmyshop.com/admin/advancedstock/manufacturing/" target="_blank" rel="noopener">
+            🏭 Ouvrir Fabrication dans BMS ↗
+          </a>
+          <button class="btn small ghost" id="fabRefreshBtn" type="button">↻ Recharger</button>
+          <span class="count" id="fabMeta"></span>
+        </div>
+      </div>
+      <div id="fabDataBox" class="hidden">
+        <div id="fabFreshness" style="margin-bottom:14px"></div>
+        <div class="kpis" id="fabKpis"></div>
+        <div class="toolbar">
+          <input type="text" id="fabSearch" placeholder="🔍 Rechercher (SKU, produit, référence…)">
+          <select id="fabStatusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="Nouveau">🆕 Nouveau</option>
+            <option value="En cours">⚙️ En cours</option>
+            <option value="Terminé">✅ Terminé</option>
+          </select>
+          <div class="spacer"></div>
+          <span class="count" id="fabCount"></span>
+        </div>
+        <div class="tablecard">
+          <table id="fabTable"><thead><tr id="fabThead"></tr></thead><tbody id="fabTbody"></tbody></table>
+          <div id="fabEmpty" class="empty hidden">Aucun ordre de fabrication pour ce filtre.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-clients" class="hidden">
+      <div class="card-search">
+        <h3>🔎 Suivi d'une commande client</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" id="orderSearch" placeholder="Référence de la commande (ex : 100012345)" style="flex:1;min-width:240px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px">
+          <button class="btn small" id="orderSearchBtn" style="margin:0">Rechercher</button>
+        </div>
+        <div id="orderResult" style="margin-top:14px"></div>
+      </div>
+      <div id="clientsContent">
+        <div class="kpis" id="clientsKpis"></div>
+        <div class="toolbar">
+          <input type="text" id="clientsSearch" placeholder="🔍 Rechercher (référence, client…)">
+          <select id="clientsStatusFilter">
+            <option value="">Tous (Épuisées + Partielles + Bloquées)</option>
+            <option value="Épuisée">⏳ Épuisées (en attente de stock)</option>
+            <option value="Partielle">🟡 Partielles</option>
+            <option value="Bloquée">🔴 Bloquées</option>
+          </select>
+          <select id="clientsWarehouseFilter"><option value="">Tous les entrepôts</option></select>
+          <div class="spacer"></div>
+          <span class="count" id="clientsCount"></span>
+        </div>
+        <div class="tablecard">
+          <table id="clientsTable"><thead><tr id="clientsThead"></tr></thead><tbody id="clientsTbody"></tbody></table>
+          <div id="clientsEmpty" class="empty hidden">Aucune commande en attente de stock, partielle ou bloquée. 🎉</div>
+        </div>
+        <div class="foot">Épuisées / Partielles / Bloquées via <code>/v2/order-preparation/{entrepôt}/backorder|partial|onhold</code> · suivi d'une commande (même expédiée) via <code>/sales/orders/reference/{réf}</code></div>
+      </div>
+      <div id="clientsErr" class="err" style="max-width:600px"></div>
+    </div>
+
+    <!-- TAB PLANTS (chargement automatique : sondage d'endpoints REST au login, comme pour fournisseurs/commandes) -->
+    <div id="tab-plants" class="hidden">
+      <div class="hcard">
+        <div class="hc-t">🌱 Plants Disponibles — dépôt FABRICATION</div>
+        <div class="hc-sub" style="margin-top:4px">Disponibilité mise à jour dans BMS le vendredi par Julien.</div>
+        <div class="hc-sub" id="plantsStatus" style="margin-top:8px">Chargement…</div>
+      </div>
+      <div id="plantsDataBox" class="hidden">
+        <div class="kpis" id="plantsKpis"></div>
+        <div class="toolbar">
+          <input type="text" class="search" id="plantsSearch" placeholder="🔍 Rechercher (SKU, produit…)">
+          <label class="inline"><input type="checkbox" id="plantsOnlyStock" checked> Uniquement en stock (&gt; 0)</label>
+          <div class="spacer"></div>
+          <span class="count" id="plantsCount"></span>
+          <button type="button" class="btn small" id="plantsResetBtn" title="Remet toutes les quantités souhaitées à zéro, sans exporter">🔄 Remettre à zéro</button>
+          <button type="button" class="btn small" id="plantsExportBtn" title="Télécharge le CSV (uniquement les références avec une quantité renseignée) puis remet les quantités souhaitées à zéro">✅ Valider les quantités et exporter le CSV</button>
+        </div>
+        <div class="tablecard">
+          <table id="plantsTable"><thead><tr id="plantsThead"></tr></thead><tbody id="plantsTbody"></tbody></table>
+          <div id="plantsEmpty" class="empty hidden">Aucun plant détecté dans l'entrepôt FABRICATION pour ce filtre.</div>
+        </div>
+      </div>
+      <div class="foot">Détection : désignation contenant « PLANT », catégorie BMS contenant « plant », ou fournisseur « PROD INTERNE - LES LANDES - LES PONTS DE CE ». Le vrac et la matière d'emballage sont exclus même s'ils matchent un critère. « Qté souhaitée » (+5 par clic, ou saisie directe) est mémorisée sur cet appareil. Le bouton « ✅ Valider les quantités et exporter le CSV » télécharge le fichier avec uniquement les références où une quantité a été renseignée (les lignes à 0 ne sont pas exportées), puis remet toutes les quantités à zéro. Le bouton « 🔄 Remettre à zéro » fait la même remise à zéro sans exporter, pour resaisir depuis le départ. Chargé automatiquement depuis BMS à la connexion. Si la liste reste vide, ouvrez 🔧 Diagnostic (en haut) et envoyez-moi le contenu.</div>
+    </div>
+
+    <div id="dashErr" class="err" style="max-width:600px"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+
+try{
+  const saved = JSON.parse(localStorage.getItem('bms_prefs')||'{}');
+  if(saved.server) $('server').value = saved.server;
+  if(saved.username) $('username').value = saved.username;
+}catch(e){}
+
+// ---------- Fabrication (endpoint REST BMS /v2/manufacturing) ----------
+let FAB_ROWS=[], FAB_META=null, FAB_ERR=null;
+try{
+  const savedFab = JSON.parse(localStorage.getItem('bms_fab_export')||'null');
+  if(savedFab && Array.isArray(savedFab.rows)){ FAB_ROWS=savedFab.rows; FAB_META={exported_at:savedFab.exported_at}; }
+}catch(e){}
+
+// ---------- state ----------
+let TOKEN=null, BASE='', FLAT=[], RECEIVED=[], COLUMNS=[], VISIBLE=[], sortKey=null, sortDir=1;
+let QTY_KEY=null, SUPPLIER_KEY=null, PO_KEY=null, STATUS_KEY=null, DATE_KEYS=[];
+let SUP_MAP={}, POITEM_MAP={}, PRODSUP_MAP={};
+let DIAG={suppliers:'', pos:'', orders:'', prep:'', prepSample:'', count:0, firstRow:null, plants:''};
+const NOISE_KEYS=['tax','tax_rate','extended_cost','discount_percent','subtotal','grandtotal','change_rate','qty_pack','price_base'];
+let EXPANDED=new Set(), groupSortKey='date', groupSortDir=1;
+const ID_RE = /(^id$)|(_id$)|(\.id$)/i;
+const DONE_RE = /complet|complete|received|recu|reçu|cancel|annul|clos|closed|done|termin|refus|livr/i;
+
+// ---------- Plants (fabrication) : stock entrepôt FABRICATION ----------
+// Endpoint confirmé via le swagger BMS publié (openapi/output/swagger.json, tag "advancedstock") :
+// GET /v2/warehouses/items?filters[warehouse_id]=<id> renvoie le stock par article pour un entrepôt
+// donné (sku, product_id, physical_quantity, available_quantity, reserved_quantity...), mais pas le
+// nom/la catégorie produit → jointure avec /v2/products (id → name/category) et avec PRODSUP_MAP
+// (product_id → fournisseur, déjà construit dans loadData() à partir des commandes fournisseurs).
+let PLANTS_ROWS=[], PLANTS_META=null, PLANTS_STATUS='idle', PLANTS_LOG='';
+let plantsSortKey='qty', plantsSortDir=-1;
+const SKU_PLANT_RE = /\d{4}f(?![a-z0-9])/i;
+const NAME_PLANT_RE = /\bplant/i;
+const SUPPLIER_PLANT_RE = /prod\s*interne|les\s*landes|les\s*ponts\s*de\s*c[ée]/i;
+// quantités souhaitées saisies par l'utilisateur (par SKU), gardées en local pour survivre à un
+// rechargement de page, comme le reste des préférences de l'outil (bms_prefs, bms_fab_export)
+let PLANTS_WANTED = {};
+try{ PLANTS_WANTED = JSON.parse(localStorage.getItem('bms_plants_wanted')||'{}') || {}; }catch(e){ PLANTS_WANTED = {}; }
+function plantsWantedQty(sku){ const v = PLANTS_WANTED[String(sku||'')]; return Number.isFinite(v) ? v : 0; }
+function setPlantsWanted(sku, v){
+  const key = String(sku||''); if(!key) return;
+  const n = Math.max(0, Math.round(toNum(v) || 0));
+  if(n) PLANTS_WANTED[key] = n; else delete PLANTS_WANTED[key];
+  try{ localStorage.setItem('bms_plants_wanted', JSON.stringify(PLANTS_WANTED)); }catch(e){}
+}
+
+// ---------- helpers ----------
+function statusLabel(v){
+  if(v==null||v==='') return '';
+  const key=String(v).toLowerCase().trim().replace(/[\s-]+/g,'_');
+  const map={
+    expected:'Attendue', awaiting:'Attendue', pending:'En attente',
+    to_confirm:'À confirmer', toconfirm:'À confirmer', to_be_confirmed:'À confirmer', tobeconfirmed:'À confirmer',
+    draft:'Brouillon',
+    confirmed:'Confirmée', ordered:'Commandée', sent:'Envoyée',
+    partially_received:'Partiellement reçue', partial:'Partiellement reçue', partially:'Partiellement reçue',
+    received:'Reçue', complete:'Terminée', completed:'Terminée', closed:'Clôturée',
+    canceled:'Annulée', cancelled:'Annulée', refused:'Refusée',
+    processing:'En traitement', shipped:'Expédiée', partially_shipped:'Partiellement expédiée',
+    delivered:'Livrée', new:'Nouvelle', holded:'En attente (bloquée)', on_hold:'En attente (bloquée)',
+    payment_review:'Vérif. paiement', pending_payment:'Paiement en attente', to_ship:'À expédier'
+  };
+  if(map[key]) return map[key];
+  return key.charAt(0).toUpperCase()+key.slice(1).replace(/_/g,' ');
+}
+function humanize(k){
+  const map = {
+    sku:'SKU', name:'Produit', product_name:'Produit', supplier_sku:'Réf. fournisseur',
+    supplier_name:'Fournisseur', supplier:'Fournisseur',
+    qty:'Qté commandée', quantity:'Qté', qty_received:'Qté reçue', qty_remaining:'Qté restante (attendue)',
+    qty_pack:'Qté / colis', qty_expected:'Qté attendue',
+    reference:'Réf. commande', supplier_reference:'Réf. cmde fournisseur', po:'Commande', po_reference:'Réf. commande',
+    status:'Statut commande', po_reference:'Réf. commande', value_remaining:'Valeur attendue (coût)',
+    grandtotal:'Valeur totale cmde', eta:'Date prévue', expected_date:'Date prévue',
+    warehouse_name:'Entrepôt', warehouse:'Entrepôt', created_at:'Créé le', updated_at:'Modifié le',
+    ean:'EAN', price:'Prix', comment:'Commentaire'
+  };
+  if(map[k]) return map[k];
+  return k.replace(/[_\.]/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/\b\w/g,c=>c.toUpperCase());
+}
+function isNum(v){ return typeof v==='number' || (typeof v==='string' && v.trim()!=='' && !isNaN(v) && /^-?\d[\d\s.,]*$/.test(v.trim())); }
+function toNum(v){ const n = typeof v==='number'? v : parseFloat(String(v).replace(/\s/g,'').replace(',','.')); return isNaN(n)?null:n; }
+function flatten(obj, prefix, out){
+  out=out||{}; prefix=prefix||'';
+  for(const k in obj){
+    const v=obj[k]; const key=prefix?prefix+'.'+k:k;
+    if(v!==null && typeof v==='object' && !Array.isArray(v)) flatten(v,key,out);
+    else if(Array.isArray(v)) out[key]=v.map(x=> typeof x==='object'? JSON.stringify(x):x).join(', ');
+    else out[key]=v;
+  }
+  return out;
+}
+function fmtDate(v){ if(v==null||v==='') return ''; const d=new Date(v); if(isNaN(d)) return v; return d.toLocaleDateString('fr-FR',{year:'numeric',month:'2-digit',day:'2-digit'}); }
+function fmtNum(v){ const n=toNum(v); if(n==null) return v; return n.toLocaleString('fr-FR',{maximumFractionDigits:2}); }
+
+// ---------- API ----------
+async function getToken(base, username, password){
+  const r = await fetch(base.replace(/\/$/,'')+'/auth/token', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+  if(r.status===401) throw new Error('Identifiants incorrects (utilisateur ou mot de passe).');
+  if(!r.ok) throw new Error('Erreur authentification : HTTP '+r.status);
+  const j = await r.json();
+  if(!j.token) throw new Error('Réponse inattendue : pas de token reçu.');
+  return j.token;
+}
+function extractRows(json){
+  if(Array.isArray(json)) return json;
+  for(const k of ['data','items','results','records','rows','expected']) if(Array.isArray(json[k])) return json[k];
+  if(json.data){ if(Array.isArray(json.data)) return json.data; for(const k of ['items','records','rows']) if(Array.isArray(json.data[k])) return json.data[k]; }
+  return [];
+}
+async function fetchAll(path, token){
+  const limit=200; let offset=0, all=[], guard=0;
+  while(guard++<80){
+    const url = BASE.replace(/\/$/,'')+path+(path.includes('?')?'&':'?')+'limit='+limit+'&offset='+offset;
+    const r = await fetch(url,{headers:{'Authorization':'Bearer '+token}});
+    if(r.status===401) throw new Error('Session expirée. Reconnectez-vous.');
+    if(r.status===429) throw new Error('Trop de requêtes (limite API atteinte). Réessayez dans une minute.');
+    if(!r.ok) throw new Error('Erreur chargement ('+path+') : HTTP '+r.status);
+    const rows = extractRows(await r.json());
+    all = all.concat(rows);
+    if(rows.length<limit) break;
+    offset+=limit;
+  }
+  return all;
+}
+// comme fetchAll, mais lit meta.total sur la 1re page puis lance toutes les pages restantes en
+// parallèle au lieu d'attendre page après page : utile pour un gros listing (ex. catalogue produits)
+// qui devenait très long à charger en séquentiel
+async function fetchAllParallel(path, token){
+  const limit=200;
+  const url0 = BASE.replace(/\/$/,'')+path+(path.includes('?')?'&':'?')+'limit='+limit+'&offset=0';
+  const r0 = await fetch(url0,{headers:{'Authorization':'Bearer '+token}});
+  if(r0.status===401) throw new Error('Session expirée. Reconnectez-vous.');
+  if(r0.status===429) throw new Error('Trop de requêtes (limite API atteinte). Réessayez dans une minute.');
+  if(!r0.ok) throw new Error('Erreur chargement ('+path+') : HTTP '+r0.status);
+  const json0 = await r0.json();
+  const page0 = extractRows(json0);
+  const total = json0 && json0.meta && Number.isFinite(json0.meta.total) ? json0.meta.total : null;
+  if(total==null || page0.length>=total) return page0;
+  const offsets=[]; for(let o=limit; o<total; o+=limit) offsets.push(o);
+  const pages = await Promise.all(offsets.map(o=>{
+    const url = BASE.replace(/\/$/,'')+path+(path.includes('?')?'&':'?')+'limit='+limit+'&offset='+o;
+    return fetch(url,{headers:{'Authorization':'Bearer '+token}}).then(r=>r.ok?r.json():{data:[]}).then(j=>extractRows(j)).catch(()=>[]);
+  }));
+  return page0.concat(...pages);
+}
+
+// ---------- enrichment + detection ----------
+function buildSupplierMap(list){
+  const m={};
+  list.forEach(s=>{
+    if(!s) return;
+    const id = s.id ?? s.supplier_id ?? s.ID ?? s.supplierId;
+    const name = s.name ?? s.supplier_name ?? s.company ?? s.label ?? s.title;
+    if(id!=null && name) m[String(id)]=name;
+  });
+  return m;
+}
+function enrichAndDetect(rawRows){
+  const flat = rawRows.map(r=>flatten(r));
+  flat.forEach(r=>{
+    // remaining qty
+    if(r.qty_remaining==null){ const q=toNum(r.qty), rec=toNum(r.qty_received); if(q!=null&&rec!=null) r.qty_remaining=q-rec; }
+    // join to purchase order (by item id) → supplier name, status, po ref, eta
+    const info = POITEM_MAP[String(r.id)];
+    if(info){
+      if(!r.supplier_name) r.supplier_name=info.supplier_name;
+      if(!r.status) r.status=info.status;
+      if(!r.po_reference) r.po_reference=info.po_reference;
+      if((r.eta==null||r.eta==='')&&info.po_eta) r.eta=info.po_eta;
+      if(r.supplier_reference==null) r.supplier_reference=info.supplier_reference;
+      if(r.po_comments==null) r.po_comments=info.comments;
+    }
+    // fallback supplier via product association
+    if((r.supplier_name==null||r.supplier_name==='') && r.product_id!=null && PRODSUP_MAP[String(r.product_id)]) r.supplier_name=PRODSUP_MAP[String(r.product_id)];
+    // value of remaining qty (at cost price)
+    const p=toNum(r.price), qr=toNum(r.qty_remaining);
+    if(p!=null&&qr!=null) r.value_remaining=Math.round(p*qr*100)/100;
+  });
+  // columns
+  const keys=[];
+  flat.forEach(r=>Object.keys(r).forEach(k=>{ if(!keys.includes(k)) keys.push(k); }));
+  // priority ordering
+  const pri = ['supplier_name','po_reference','reference','status','sku','name','supplier_sku','qty','qty_received','qty_remaining','eta','expected_date','value_remaining','price','warehouse_name'];
+  keys.sort((a,b)=>{
+    let ia=pri.indexOf(a), ib=pri.indexOf(b);
+    if(ia<0) ia=999; if(ib<0) ib=999;
+    return ia-ib;
+  });
+  COLUMNS = keys;
+  QTY_KEY = keys.find(k=>k==='qty_remaining') || keys.find(k=>/(expected|attendu|remaining|restant).*(qty|quant)|(qty|quant).*(expected|attendu|remaining|restant)/i.test(k)) || keys.find(k=>/^qty$|quantity/i.test(k));
+  SUPPLIER_KEY = keys.find(k=>/supplier_name|fournisseur/i.test(k)) || keys.find(k=>/supplier/i.test(k) && !/sku/i.test(k) && flat.some(r=>typeof r[k]==='string'));
+  PO_KEY = keys.find(k=>k==='reference') || keys.find(k=>/(po|purchase).*(ref|number|name)|order.*ref|^po$/i.test(k));
+  STATUS_KEY = keys.find(k=>k==='status' || /(^|\.)status$/i.test(k) && !/invoice/i.test(k)) || keys.find(k=>/(^|\.)status$/i.test(k));
+  DATE_KEYS = keys.filter(k=>/date|eta|_at$/i.test(k));
+  return flat;
+}
+function computeVisible(){
+  VISIBLE = COLUMNS.filter(k=>{
+    if($('showIds').checked) return true;
+    if(ID_RE.test(k)) return false;         // hide technical id columns
+    if(NOISE_KEYS.includes(k)) return false; // hide financial noise columns
+    return true;
+  });
+}
+
+// ---------- render (grouped by purchase order) ----------
+function esc(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function escAttr(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+
+function passItem(r, term, supVal, stVal){
+  if(STATUS_KEY && stVal){
+    const sv=String(r.status??'');
+    if(stVal==='__pending__'){ if(DONE_RE.test(sv)) return false; }
+    else if(sv!==stVal) return false;
+  }
+  if(supVal && String(r.supplier_name??'')!==supVal) return false;
+  if(term){
+    const hay=[r.sku,r.name,r.supplier_name,r.status,r.po_reference,r.supplier_sku,r.supplier_reference,r.po_comments].map(x=>String(x??'').toLowerCase()).join(' ');
+    if(!hay.includes(term)) return false;
+  }
+  return true;
+}
+function summarizeGroup(g){
+  // 1) human label written in BMS (réf. fournisseur / commentaires)
+  let label = (g.supplier_reference||'').trim() || (g.comments||'').trim();
+  // 2) otherwise auto-summary from product names
+  if(!label){
+    const names=[...new Set(g.items.map(it=>String(it.name||'').trim()).filter(Boolean))];
+    if(names.length) label = names.length<=2 ? names.join(', ') : names.slice(0,2).join(', ')+' +'+(names.length-2)+' autres';
+  }
+  label = label.replace(/\s+/g,' ').trim();
+  if(label.length>140) label = label.slice(0,138)+'…';
+  return label;
+}
+const SEED_RE=/semence|graine|\bseed/i;
+const NONSEED_RE=/\blivre|livret|coffret|\bjeu(x)?\b|jouet|puzzle|\bcarte|affiche|poster|calendrier|magazine|revue|guide|dvd|terreau|godet|\bpots?\b|outil|s[ée]cateur|\bgants?\b|arrosoir|[ée]tiquette|marqueur|\bserre\b|voile|filet|engrais|purin|b[âa]che|tuteur|mangeoire|nichoir|h[ôo]tel|sticker|tablier|\bmug\b|t-?shirt|bulbe|carnet|cahier|badge|autocollant/i;
+function isSeedItem(it){
+  const t=[it.name,it.supplier_reference,it.po_comments].map(x=>String(x||'')).join(' ');
+  if(SEED_RE.test(t)) return true;
+  if(NONSEED_RE.test(t)) return false;
+  return true; // défaut: semences (semencier)
+}
+function buildGroups(rows){
+  const map=new Map();
+  rows.forEach(r=>{
+    const key=(r.po_reference!=null && r.po_reference!=='')? String(r.po_reference) : '(sans référence)';
+    if(!map.has(key)) map.set(key,{ref:key, supplier:r.supplier_name||'', status:r.status||'', date:r.eta||'', supplier_reference:r.supplier_reference||'', comments:r.po_comments||'', items:[]});
+    const g=map.get(key); g.items.push(r);
+    if(!g.supplier && r.supplier_name) g.supplier=r.supplier_name;
+    if(!g.status && r.status) g.status=r.status;
+    if(!g.date && r.eta) g.date=r.eta;
+    if(!g.supplier_reference && r.supplier_reference) g.supplier_reference=r.supplier_reference;
+    if(!g.comments && r.po_comments) g.comments=r.po_comments;
+  });
+  const groups=[...map.values()];
+  groups.forEach(g=>{
+    g.count=g.items.length;
+    g.qty=g.items.reduce((s,r)=>s+(toNum(r.qty_remaining)||0),0);
+    g.value=g.items.reduce((s,r)=>s+(toNum(r.value_remaining)||0),0);
+    g.summary=summarizeGroup(g);
+    let seedN=0, horsN=0; g.items.forEach(it=>{ isSeedItem(it)?seedN++:horsN++; });
+    g.nature_cat = horsN>seedN ? 'hors' : 'semences';
+  });
+  return groups;
+}
+
+const SUMCOLS=[['date','Date prévue',0],['status','Statut',0],['ref','Réf. commande',0],['supplier','Fournisseur',0],['summary','Nature de l\'arrivage',0],['count','Lignes',1],['qty','Qté attendue',1],['value','Valeur (€)',1]];
+
+function render(){
+  const term=$('search').value.trim().toLowerCase();
+  const supVal=$('supplierFilter').value;
+  const stVal=$('statusFilter').value;
+  const natVal=$('natureFilter').value;
+  const rows=FLAT.filter(r=>passItem(r,term,supVal,stVal));
+  let groups=buildGroups(rows);
+  if(natVal) groups=groups.filter(g=>g.nature_cat===natVal);
+  groups.sort((a,b)=>{
+    let x=a[groupSortKey], y=b[groupSortKey];
+    if(['count','qty','value'].includes(groupSortKey)){ x=+x||0; y=+y||0; }
+    else { x=String(x??'').toLowerCase(); y=String(y??'').toLowerCase(); }
+    return x<y?-1*groupSortDir : x>y?1*groupSortDir : 0;
+  });
+  // KPIs (sur les commandes affichées)
+  const shown=groups.flatMap(g=>g.items);
+  const totalQty=shown.reduce((s,r)=>s+(toNum(r.qty_remaining)||0),0);
+  const totalVal=shown.reduce((s,r)=>s+(toNum(r.value_remaining)||0),0);
+  const kpis=[
+    {v:groups.length.toLocaleString('fr-FR'), l:'Commandes en attente'},
+    {v:shown.length.toLocaleString('fr-FR'), l:'Lignes attendues'},
+    {v:totalQty.toLocaleString('fr-FR',{maximumFractionDigits:0}), l:'Quantité totale attendue'},
+    {v:totalVal.toLocaleString('fr-FR',{maximumFractionDigits:0})+' €', l:'Valeur attendue (coût)'}
+  ];
+  $('kpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+  // header
+  $('theadRow').innerHTML='<th style="width:36px"></th>'+SUMCOLS.map(c=>{
+    const a=groupSortKey===c[0]?(groupSortDir===1?'▲':'▼'):'';
+    return `<th data-k="${c[0]}"${c[2]?' style="text-align:right"':''}>${c[1]}<span class="arrow">${a}</span></th>`;
+  }).join('');
+  $('theadRow').querySelectorAll('th[data-k]').forEach(th=>{ th.onclick=()=>{ const k=th.dataset.k; if(groupSortKey===k) groupSortDir*=-1; else{groupSortKey=k;groupSortDir=1;} render(); }; });
+  // body
+  const tb=$('tbody');
+  if(groups.length===0){ tb.innerHTML=''; $('emptyBox').classList.remove('hidden'); }
+  else{
+    $('emptyBox').classList.add('hidden');
+    const autoExpand=!!term;
+    const det=[['sku','SKU',0],['name','Produit',0],['qty','Qté commandée',1],['qty_received','Qté reçue',1],['qty_remaining','Qté restante',1],['price','Prix',1],['value_remaining','Valeur',1]];
+    if($('showIds').checked){ det.push(['product_id','product_id',0],['id','id ligne',0]); }
+    let html='';
+    groups.forEach(g=>{
+      const open=autoExpand||EXPANDED.has(g.ref);
+      html+=`<tr class="grp${open?' open':''}" data-ref="${escAttr(g.ref)}">`
+        +`<td class="tog">${open?'−':'+'}</td>`
+        +`<td>${fmtDate(g.date)}</td>`
+        +`<td>${esc(statusLabel(g.status))}</td>`
+        +`<td>${esc(g.ref)}</td>`
+        +`<td>${esc(g.supplier)}</td>`
+        +`<td class="sumcell" title="${escAttr(g.summary)}">${esc(g.summary)}</td>`
+        +`<td class="num">${g.count}</td>`
+        +`<td class="num">${g.qty.toLocaleString('fr-FR',{maximumFractionDigits:0})}</td>`
+        +`<td class="num">${g.value.toLocaleString('fr-FR',{maximumFractionDigits:0})} €</td></tr>`;
+      const sub='<div class="sub-wrap"><table class="sub"><thead><tr>'
+        +det.map(d=>`<th${d[2]?' style="text-align:right"':''}>${d[1]}</th>`).join('')+'</tr></thead><tbody>'
+        +g.items.map(it=>'<tr>'+det.map(d=>{ let v=it[d[0]]; if(d[2]) return `<td class="num">${v==null||v===''?'':fmtNum(v)}</td>`; return `<td>${v==null?'':esc(v)}</td>`; }).join('')+'</tr>').join('')
+        +'</tbody></table></div>';
+      html+=`<tr class="det" data-ref="${escAttr(g.ref)}"${open?'':' style="display:none"'}><td colspan="9">${sub}</td></tr>`;
+    });
+    tb.innerHTML=html;
+    tb.querySelectorAll('tr.grp').forEach(tr=>{ tr.onclick=()=>{ const ref=tr.dataset.ref; if(EXPANDED.has(ref)) EXPANDED.delete(ref); else EXPANDED.add(ref); render(); }; });
+  }
+  $('rowCount').textContent=groups.length+' commande'+(groups.length>1?'s':'')+' · '+shown.length+' ligne'+(shown.length>1?'s':'');
+}
+
+function buildFilters(){
+  // status
+  const sf=$('statusFilter');
+  if(STATUS_KEY){
+    const vals=[...new Set(FLAT.map(r=>r[STATUS_KEY]).filter(x=>x!=null&&x!==''))].sort();
+    sf.classList.remove('hidden');
+    sf.innerHTML = '<option value="__pending__">🟡 En attente (masquer reçues/annulées)</option>'
+      + '<option value="">Tous les statuts</option>'
+      + vals.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${statusLabel(v)}</option>`).join('');
+    sf.value='__pending__';
+    sf.onchange=render;
+  } else { sf.classList.add('hidden'); }
+  // supplier
+  const su=$('supplierFilter');
+  if(SUPPLIER_KEY){
+    const vals=[...new Set(FLAT.map(r=>r[SUPPLIER_KEY]).filter(x=>x!=null&&x!==''))].sort();
+    if(vals.length>=2){
+      su.classList.remove('hidden');
+      su.innerHTML='<option value="">Tous les fournisseurs</option>'+vals.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${v}</option>`).join('');
+      su.onchange=render;
+    } else su.classList.add('hidden');
+  } else su.classList.add('hidden');
+}
+
+async function loadData(){
+  CLIENTS_READY=false;
+  $('dashView').classList.remove('hidden'); $('loginView').classList.add('hidden');
+  $('tabsBar').style.display='flex';
+  $('loadingBox').classList.remove('hidden'); $('content').classList.add('hidden'); $('dashErr').style.display='none';
+  try{
+    $('loadingMsg').textContent='Chargement des fournisseurs…';
+    SUP_MAP={}; DIAG.suppliers='';
+    for(const ep of ['/supplier/suppliers','/v2/suppliers']){
+      try{
+        const list = await fetchAll(ep, TOKEN);
+        const m = buildSupplierMap(list);
+        DIAG.suppliers += ep+' → '+list.length+' fournisseur(s), '+Object.keys(m).length+' mappé(s)';
+        if(list[0]) DIAG.suppliers += ' [champs: '+Object.keys(list[0]).join(',')+']';
+        DIAG.suppliers += '\n';
+        if(Object.keys(m).length){ SUP_MAP=m; break; }
+      }catch(e){ DIAG.suppliers += ep+' → erreur: '+e.message+'\n'; }
+    }
+    // purchase orders → map item id -> {supplier_name, status, reference, eta}
+    $('loadingMsg').textContent='Chargement des commandes fournisseurs (noms, statuts)…';
+    POITEM_MAP={}; PRODSUP_MAP={}; RECEIVED=[]; DIAG.pos='';
+    try{
+      const pos = await fetchAll('/supplier/purchase-orders', TOKEN);
+      let withItems=0, totalItems=0;
+      pos.forEach(po=>{
+        const sname = po.supplier_name || SUP_MAP[String(po.supplier_id)] || '';
+        const info = {supplier_name:sname, status:po.status||'', po_reference:po.reference||'', po_eta:po.eta||'', supplier_reference:po.supplier_reference||'', comments:(po.public_comments||po.private_comments||'')};
+        const recDate = po.updated_at||po.eta||po.created_at||'';
+        if(Array.isArray(po.items) && po.items.length){
+          withItems++; totalItems+=po.items.length;
+          po.items.forEach(it=>{
+            if(it && it.id!=null) POITEM_MAP[String(it.id)]=info;
+            if(it && it.product_id!=null && sname) PRODSUP_MAP[String(it.product_id)]=sname;
+            const rec=toNum(it && it.qty_received);
+            if(rec && rec>0) RECEIVED.push({supplier_name:sname, po_reference:po.reference||'', status:po.status||'', supplier_reference:po.supplier_reference||'', po_comments:(po.public_comments||po.private_comments||''), sku:it.sku, name:it.name, qty_received:rec, price:toNum(it.price), product_id:it.product_id, date:recDate});
+          });
+        }
+      });
+      DIAG.pos='/supplier/purchase-orders → '+pos.length+' commande(s), '+withItems+' avec items, '+totalItems+' items mappés';
+      if(pos[0]) DIAG.pos+=' [champs: '+Object.keys(pos[0]).join(',')+']';
+    }catch(e){ DIAG.pos='/supplier/purchase-orders → erreur: '+e.message; }
+    // fallback if PO list carried no items: product→supplier via supplier products
+    if(Object.keys(POITEM_MAP).length===0){
+      try{
+        const sp = await fetchAll('/supplier/products', TOKEN);
+        sp.forEach(x=>{ const sid=x.supplier_id??x.supplierId; const sn=x.supplier_name||(sid!=null?SUP_MAP[String(sid)]:'')||''; if(sn && x.product_id!=null) PRODSUP_MAP[String(x.product_id)]=sn; });
+        DIAG.pos+=' | repli /supplier/products → '+sp.length+' assoc.'+(sp[0]?' [champs: '+Object.keys(sp[0]).join(',')+']':'');
+      }catch(e){ DIAG.pos+=' | repli erreur: '+e.message; }
+    }
+    $('loadingMsg').textContent='Chargement des attendus de réception…';
+    const raw = await fetchAll('/supplier/purchase-orders/items/expected', TOKEN);
+    DIAG.count = raw.length; DIAG.firstRow = raw[0]||null;
+    FLAT = enrichAndDetect(raw);
+    // warn if supplier names still unresolved
+    const anyName = SUPPLIER_KEY && FLAT.some(r=>typeof r[SUPPLIER_KEY]==='string' && r[SUPPLIER_KEY].trim()!=='');
+    if(!anyName){
+      $('warnBox').classList.remove('hidden');
+      $('warnBox').innerHTML='⚠️ Les noms de fournisseurs n\'ont pas pu être résolus automatiquement. Cliquez sur <strong>🔧 Diagnostic</strong> en haut à droite, copiez le contenu et envoyez-le moi pour que j\'ajuste.';
+    } else { $('warnBox').classList.add('hidden'); }
+    sortKey=null; buildFilters(); render();
+    buildRecFilters(); renderReceptions();
+    // affichage immédiat : attendus + réceptions sont prêts, pas besoin d'attendre le reste
+    renderClients(); renderHome();
+    $('lastUpdate').textContent='· mis à jour le '+new Date().toLocaleString('fr-FR');
+    $('loadingBox').classList.add('hidden'); $('content').classList.remove('hidden');
+    switchTab(currentTab==='plants' ? 'plants' : 'home');
+    // commandes en attente de marchandise : chargées en arrière-plan (n'empêche pas l'affichage du reste)
+    loadPrepOrders().catch(e=>[]).then(prep=>{
+      PREP_ORDERS=prep; CLIENTS_READY=true;
+      renderClients(); renderHome();
+      $('lastUpdate').textContent='· mis à jour le '+new Date().toLocaleString('fr-FR');
+    });
+    // stock plants (dépôt FABRICATION) : chargé en arrière-plan, sondage auto des endpoints
+    loadPlantsAuto();
+    // ordres de fabrication : endpoint REST /v2/manufacturing, chargé en arrière-plan
+    loadFabricationAuto().then(()=>{ renderFabrication(); renderHome(); });
+  }catch(e){
+    $('loadingBox').classList.add('hidden'); $('dashErr').textContent=e.message; $('dashErr').style.display='block';
+  }
+}
+
+function downloadCSV(filenamePrefix, cols, rows, getVal){
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const lines=[cols.map(c=>q(c[1])).join(';')];
+  rows.forEach(r=>lines.push(cols.map(c=>q(getVal(r,c[0]))).join(';')));
+  const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=filenamePrefix+'-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+}
+function exportCSV(){
+  if(!FLAT.length) return;
+  const cols=[['eta','Date prévue'],['status','Statut'],['po_reference','Réf. commande'],['supplier_name','Fournisseur'],['sku','SKU'],['name','Produit'],['qty','Qté commandée'],['qty_received','Qté reçue'],['qty_remaining','Qté restante (attendue)'],['price','Prix'],['value_remaining','Valeur (coût)']];
+  const term=$('search').value.trim().toLowerCase(), supVal=$('supplierFilter').value, stVal=$('statusFilter').value, natVal=$('natureFilter').value;
+  let groups=buildGroups(FLAT.filter(r=>passItem(r,term,supVal,stVal)));
+  if(natVal) groups=groups.filter(g=>g.nature_cat===natVal);
+  const rows=groups.flatMap(g=>g.items);
+  downloadCSV('commandes-fournisseurs-en-cours', cols, rows, (r,k)=> k==='eta'?fmtDate(r.eta) : k==='status'?statusLabel(r.status) : r[k]);
+}
+function exportReceivedCSV(){
+  if(!RECEIVED.length) return;
+  const cols=[['date','Date réception'],['status','Statut'],['po_reference','Réf. commande'],['supplier_name','Fournisseur'],['sku','SKU'],['name','Produit'],['qty_received','Qté reçue'],['price','Prix']];
+  const term=$('recSearch').value.trim().toLowerCase(), days=parseInt($('recPeriod').value,10), supVal=$('recSupplierFilter').value, natVal=$('recNatureFilter').value;
+  let rows=RECEIVED.filter(r=>periodOk(r.date,days));
+  if(supVal) rows=rows.filter(r=>String(r.supplier_name||'')===supVal);
+  if(term) rows=rows.filter(r=>[r.sku,r.name,r.supplier_name,r.po_reference,r.supplier_reference].map(x=>String(x??'').toLowerCase()).join(' ').includes(term));
+  let groups=buildRecGroups(rows);
+  if(natVal) groups=groups.filter(g=>g.nature_cat===natVal);
+  const flat=groups.flatMap(g=>g.items);
+  downloadCSV('receptions', cols, flat, (r,k)=> k==='date'?fmtDate(r.date) : k==='status'?statusLabel(r.status) : r[k]);
+}
+function exportFabricationCSV(){
+  if(!FAB_ROWS.length) return;
+  const cols=[['date','Date'],['reference','Référence'],['batch','Batch'],['sku','SKU'],['produit','Produit'],['qte_a_produire','Qté à produire'],['qte_produite','Qté produite'],['statut','Statut']];
+  const term=$('fabSearch').value.trim().toLowerCase(), stVal=$('fabStatusFilter').value;
+  const rows=FAB_ROWS.filter(r=>{
+    if(stVal && r.statut!==stVal) return false;
+    if(term){ const hay=[r.sku,r.produit,r.reference,r.batch].map(x=>String(x??'').toLowerCase()).join(' '); if(!hay.includes(term)) return false; }
+    return true;
+  });
+  downloadCSV('fabrication-sachets', cols, rows, (r,k)=>r[k]);
+}
+function exportClientsCSV(){
+  if(!PREP_ORDERS.length) return;
+  const cols=[['date','Date'],['ref','Référence'],['cust','Client'],['qty','Art.'],['warehouse','Entrepôt'],['bucket','Statut'],['missing','Article(s) manquant(s)']];
+  const term=($('clientsSearch').value||'').trim().toLowerCase(), stVal=$('clientsStatusFilter').value, whVal=$('clientsWarehouseFilter').value;
+  const rows=PREP_ORDERS.filter(o=>{
+    if(stVal && o.bucket!==stVal) return false;
+    if(whVal && o.warehouse!==whVal) return false;
+    if(term){ const hay=[o.ref,o.cust,o.warehouse].map(x=>String(x??'').toLowerCase()).join(' '); if(!hay.includes(term)) return false; }
+    return true;
+  });
+  downloadCSV('info-commandes-clients', cols, rows, (r,k)=>{
+    if(k==='date') return fmtDate(r.date);
+    if(k==='missing'){ const info=orderStockInfo({items:r.items}); return info.missing&&info.missing.length? info.missing.map(m=>(m.name||m.sku||'?')+(m.manque!=null?' ('+fmtNum(m.manque)+')':'')).join(', ') : ''; }
+    return r[k];
+  });
+}
+function exportPlantsCSV(){
+  if(!PLANTS_ROWS.length) return;
+  const cols=[['sku','SKU'],['name','Produit'],['qty','Qté disponible'],['wanted','Qté souhaitée']];
+  const term=($('plantsSearch').value||'').trim().toLowerCase(), onlyStock=$('plantsOnlyStock').checked;
+  const rows=PLANTS_ROWS.filter(r=>isPlantRow(r).match).filter(r=>{
+    if(onlyStock && !(toNum(r.qty)>0)) return false;
+    if(term){ const hay=[r.sku,r.name].map(x=>String(x??'').toLowerCase()).join(' '); if(!hay.includes(term)) return false; }
+    return true;
+  }).filter(r=> plantsWantedQty(r.sku) > 0); // n'exporter que les références où une quantité a été renseignée
+  if(!rows.length){ alert("Aucune quantité souhaitée renseignée : rien à exporter."); return; }
+  downloadCSV('plants-fabrication', cols, rows, (r,k)=> k==='wanted' ? plantsWantedQty(r.sku) : r[k]);
+  // une fois l'export "validé" (téléchargé), on repart d'une liste vierge de quantités souhaitées
+  // (demande d'Arnaud : éviter de réexporter les mêmes quantités par erreur la fois suivante)
+  resetPlantsWanted();
+}
+function resetPlantsWanted(){
+  PLANTS_WANTED = {};
+  try{ localStorage.setItem('bms_plants_wanted', JSON.stringify(PLANTS_WANTED)); }catch(e){}
+  renderPlants();
+}
+function exportCurrentTabCSV(){
+  if(currentTab==='reception') exportCSV();
+  else if(currentTab==='receptions') exportReceivedCSV();
+  else if(currentTab==='fabrication') exportFabricationCSV();
+  else if(currentTab==='clients') exportClientsCSV();
+  else if(currentTab==='plants') exportPlantsCSV();
+}
+
+// ================= ONGLET TABLEAU DE BORD / RÉCEPTIONS / CLIENTS =================
+let currentTab='home', TOSHIP=[], PAYSIG=false, PREP_ORDERS=[];
+let CLIENTS_EXPANDED=new Set(), HOME_STOCK_EXPANDED=new Set();
+function itemsDetailHtml(items){
+  if(!items || !items.length) return '<div class="hc-sub" style="padding:6px 0 10px">Détail des articles non fourni par BMS pour cette commande.</div>';
+  const rows=items.map(it=>{
+    const q=toNum(it.qty), sh=toNum(it.qty_shipped), res=toNum(it.qty_reserved);
+    const rem=(q!=null)? Math.max(0,q-(sh||0)) : (toNum(it.qty_to_ship));
+    const manque=(rem!=null && res!=null)? Math.max(0,rem-res) : null;
+    return '<tr>'+
+      `<td>${esc(it.sku||'')}</td>`+
+      `<td>${esc(it.product||it.name||it.sku||'')}</td>`+
+      `<td class="num">${q==null?'—':fmtNum(q)}</td>`+
+      `<td class="num">${rem==null?'—':fmtNum(rem)}</td>`+
+      `<td class="num">${res==null?'—':fmtNum(res)}</td>`+
+      `<td class="num">${manque==null?'—':fmtNum(manque)}</td></tr>`;
+  }).join('');
+  return '<div class="sub-wrap" style="padding:6px 0 12px 0"><table class="sub"><thead><tr>'+
+    '<th>SKU</th><th>Produit</th><th style="text-align:right">Qté commandée</th><th style="text-align:right">Qté restante</th><th style="text-align:right">Qté réservée</th><th style="text-align:right">Manque</th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+let CLIENTS_READY=false; // passe à true une fois PREP_ORDERS chargé en arrière-plan
+let recEXPANDED=new Set(), recSortKey='date', recSortDir=-1;
+
+// une commande est "payée" si elle a une facture (signal fiable seulement si la facturation est présente dans les données)
+function isPaid(o){ if(!PAYSIG) return true; return Array.isArray(o.invoices) && o.invoices.length>0; }
+
+function switchTab(name){
+  currentTab=name;
+  ['home','reception','receptions','fabrication','clients','plants'].forEach(t=>$('tab-'+t).classList.toggle('hidden', t!==name));
+  const map={home:'tabBtnHome',reception:'tabBtnReception',receptions:'tabBtnReceptions',fabrication:'tabBtnFabrication',clients:'tabBtnClients',plants:'tabBtnPlants'};
+  Object.entries(map).forEach(([t,id])=>$(id).classList.toggle('active', t===name));
+  $('exportBtn').style.display=(name==='home')?'none':'';
+}
+
+// ---- commandes à expédier (chargement léger : plus récentes d'abord, arrêt anticipé) ----
+function orderToShipQty(o){
+  if(!Array.isArray(o.items)||!o.items.length) return null;
+  let known=false, sum=0;
+  o.items.forEach(it=>{ const q=toNum(it.qty); if(q!=null){ known=true; sum+=Math.max(0, q-(toNum(it.qty_shipped)||0)); } });
+  return known? sum : null;
+}
+function isShipped(o){ return Array.isArray(o.shipments) && o.shipments.length>0; }
+function isToShip(o){                        // candidate = non annulée et non expédiée (payée ou non)
+  const st=String(o.status||'').toLowerCase();
+  if(/cancel|annul|refun|rembours/.test(st)) return false;
+  return !isShipped(o);
+}
+function custName(o){
+  if(!o||typeof o!=='object') return '';
+  if(typeof o.customer==='string' && o.customer.trim()) return o.customer.trim();
+  const c=o.customer||{};
+  let n=[c.firstname,c.lastname].filter(Boolean).join(' ') || c.name || c.email || '';
+  if(!n && o.shipping_address){ const sa=o.shipping_address; n=[sa.firstname,sa.lastname].filter(Boolean).join(' ') || sa.company || ''; }
+  if(!n && o.billing_address){ const ba=o.billing_address; n=[ba.firstname,ba.lastname].filter(Boolean).join(' ') || ba.company || ''; }
+  if(!n){ n=[o.customer_firstname,o.customer_lastname].filter(Boolean).join(' '); }
+  if(!n){ n=o.customer_name||o.client_name||o.client||o.company||o.customer_email||o.email||''; }
+  return n;
+}
+function daysSince(d){ const t=new Date(d); if(isNaN(t)) return null; return Math.floor((Date.now()-t.getTime())/86400000); }
+
+async function fetchPlain(path){
+  const r=await fetch(BASE.replace(/\/$/,'')+path,{headers:{'Authorization':'Bearer '+TOKEN}});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return extractRows(await r.json());
+}
+// ---- commandes en attente de marchandise (partielles / épuisées / bloquées) ----
+// toutes les requêtes entrepôt × bucket partent en parallèle (au lieu d'une boucle séquentielle)
+async function loadPrepOrders(){
+  const out=[]; const seen=new Set();
+  let sample=null;
+  try{
+    const whs=await fetchPlain('/advanced-stock/warehouse');
+    const buckets=[['partial','Partielle'],['backorder','Épuisée'],['onhold','Bloquée']];
+    const tasks=[];
+    for(const w of whs){
+      const wid=(w.id!=null?w.id:w.warehouse_id); if(wid==null) continue;
+      const wname=w.name||('Entrepôt '+wid);
+      for(const [ep,label] of buckets){
+        tasks.push(
+          fetchPlain('/v2/order-preparation/'+wid+'/'+ep)
+            .then(list=>({wid, wname, ep, label, list, err:null}))
+            .catch(e=>({wid, wname, ep, label, list:[], err:e.message}))
+        );
+      }
+    }
+    const results=await Promise.all(tasks);
+    const byWh=new Map();
+    results.forEach(r=>{
+      if(!byWh.has(r.wid)) byWh.set(r.wid, {wname:r.wname, parts:[]});
+      byWh.get(r.wid).parts.push(r.label+':'+(r.err?'err('+r.err+')':r.list.length));
+      if(!sample && r.list[0]) sample=r.list[0];
+      r.list.forEach(o=>{
+        const ref=o.reference||o.id||'';
+        const key=ref+'|'+r.ep+'|'+r.wid;
+        if(seen.has(key)) return; seen.add(key);
+        out.push({ref, date:o.created_at||o.updated_at||'', cust:custName(o), qty:orderToShipQty(o), bucket:r.label, warehouse:r.wname, items:Array.isArray(o.items)?o.items:[]});
+      });
+    });
+    let prepLog='entrepôts: '+whs.map(w=>(w.name||w.id)+'#'+(w.id!=null?w.id:'?')).join(', ')+'\n';
+    byWh.forEach(v=>{ prepLog+='  '+v.wname+' → '+v.parts.join(', ')+'\n'; });
+    if(sample) prepLog+='  champs prépa: '+Object.keys(sample).join(',');
+    DIAG.prep=prepLog;
+    if(sample) DIAG.prepSample=JSON.stringify(sample, null, 1);
+    // /v2/order-preparation ne renvoie ni client ni articles détaillés : on va chercher
+    // le détail complet de chaque commande (une par une, en parallèle) via /sales/orders/reference/{ref}
+    const uniqueRefs=[...new Set(out.map(o=>o.ref).filter(Boolean))];
+    const fulls=await Promise.all(uniqueRefs.map(ref=>
+      fetch(BASE.replace(/\/$/,'')+'/sales/orders/reference/'+encodeURIComponent(ref), {headers:{'Authorization':'Bearer '+TOKEN}})
+        .then(r=>r.ok?r.json():null)
+        .then(j=>{ if(j && j.data && !j.reference) j=j.data; return [ref, j]; })
+        .catch(()=>[ref, null])
+    ));
+    const fullMap=new Map(fulls);
+    out.forEach(o=>{
+      const full=fullMap.get(o.ref);
+      if(!full) return;
+      const cn=custName(full);
+      if(cn) o.cust=cn;
+      if(Array.isArray(full.items) && full.items.length) o.items=full.items;
+      if(!o.date && full.created_at) o.date=full.created_at;
+      if(o.qty==null){ const q=orderToShipQty(full); if(q!=null) o.qty=q; }
+    });
+    if(uniqueRefs.length && fulls[0] && fulls[0][1]) DIAG.prepSample=JSON.stringify(fulls[0][1], null, 1);
+  }catch(e){ DIAG.prep='préparation → erreur: '+e.message; }
+  return out;
+}
+// ---- stock plants (entrepôt FABRICATION) : endpoint non documenté, sondage automatique ----
+// SKU (####F) gardé pour info seulement (trop de faux positifs : la lettre finale d'un SKU BMS
+// semble être un code générique, pas un marqueur fiable de "plant") — ne compte plus dans le match.
+const VRAC_RE = /\bvrac\b/i;
+const EMBALLAGE_RE = /emballage/i;
+function isPlantRow(r){
+  const sku = String(r.sku||'');
+  const name = String(r.name||'');
+  const category = String(r.category||'');
+  const sup = String(r.supplier || (r.product_id!=null ? (PRODSUP_MAP[String(r.product_id)]||'') : '') || '');
+  const bySku = SKU_PLANT_RE.test(sku);
+  const byName = NAME_PLANT_RE.test(name);
+  const bySup = SUPPLIER_PLANT_RE.test(sup);
+  const byCategory = /\bplant/i.test(category);
+  // le vrac (matière première en gros conditionnement) et la matière d'emballage ne sont pas des
+  // plants vendables : exclus même s'ils matchent un autre critère (ex. fournisseur production interne)
+  const isVrac = VRAC_RE.test(name) || VRAC_RE.test(category);
+  const isPackaging = EMBALLAGE_RE.test(name) || EMBALLAGE_RE.test(category);
+  const excluded = isVrac || isPackaging;
+  return { match: (byName||bySup||byCategory) && !excluded, bySku, byName, bySup, byCategory, isVrac, isPackaging };
+}
+async function loadPlantsAuto(){
+  PLANTS_STATUS='loading'; renderPlants();
+  let log='';
+  try{
+    const whs = await fetchPlain('/advanced-stock/warehouse');
+    log += 'entrepôts: '+whs.map(w=>(w.name||w.id)+'#'+(w.id!=null?w.id:(w.warehouse_id??'?'))).join(', ')+'\n';
+    const fab = whs.find(w=>/fabrication/i.test(String(w.name||'')));
+    if(!fab){
+      PLANTS_STATUS='error'; PLANTS_LOG = log+'Aucun entrepôt dont le nom contient "FABRICATION" trouvé via /advanced-stock/warehouse.';
+      renderPlants(); return;
+    }
+    const wid = fab.id!=null ? fab.id : fab.warehouse_id;
+    log += 'Entrepôt FABRICATION → id='+wid+' ("'+fab.name+'")\n';
+    // stock par article pour cet entrepôt (endpoint confirmé via le swagger BMS) ; pages en parallèle
+    const items = await fetchAllParallel('/v2/warehouses/items?filters[warehouse_id]='+encodeURIComponent(wid), TOKEN);
+    log += '/v2/warehouses/items (filters[warehouse_id]='+wid+') → '+items.length+' article(s)'+(items[0]?' [champs: '+Object.keys(items[0]).join(',')+']':'')+'\n';
+    // jointure produit (nom / catégorie) : le stock par entrepôt ne porte que sku + quantités,
+    // pas le nom/la catégorie du produit — catalogue chargé en parallèle (sinon très long : plusieurs
+    // milliers de produits, page par page en séquentiel)
+    const products = await fetchAllParallel('/v2/products', TOKEN);
+    const prodById = {};
+    products.forEach(p=>{ if(p && p.id!=null) prodById[String(p.id)] = p; });
+    log += '/v2/products → '+products.length+' produit(s) (jointure par product_id)\n';
+    const mapped = items.map(it=>{
+      const pid = it.product_id!=null ? it.product_id : null;
+      const p = pid!=null ? prodById[String(pid)] : null;
+      const qty = toNum(it.available_quantity!=null ? it.available_quantity : it.physical_quantity);
+      return {
+        sku: it.sku ?? (p && p.sku) ?? '',
+        name: (p && p.name) ?? '',
+        category: (p && p.category) ?? '',
+        supplier: '', // résolu via PRODSUP_MAP dans isPlantRow() (pas de champ fournisseur direct ici)
+        product_id: pid,
+        qty,
+        physical_quantity: toNum(it.physical_quantity),
+        reserved_quantity: toNum(it.reserved_quantity)
+      };
+    });
+    log += 'Lignes exploitables après jointure : '+mapped.length+'\n';
+    const vracCount = mapped.filter(r=>VRAC_RE.test(r.name)||VRAC_RE.test(r.category)).length;
+    const embCount = mapped.filter(r=>EMBALLAGE_RE.test(r.name)||EMBALLAGE_RE.test(r.category)).length;
+    log += 'dont vrac exclu du classement plant : '+vracCount+', matière emballage exclue : '+embCount+'\n';
+    const hasAnyQty = mapped.some(r=>r.qty!=null);
+    log += 'Quantité de stock : '+(hasAnyQty?'oui':'NON — vérifier ci-dessous le format de la ligne brute (nom des champs de quantité)')+'\n';
+    if(items[0]) log += 'Exemple ligne brute (/v2/warehouses/items) : '+JSON.stringify(items[0], null, 1).slice(0,500)+'\n';
+    PLANTS_LOG = log;
+    PLANTS_ROWS = mapped;
+    PLANTS_META = {exported_at: new Date().toISOString()};
+    PLANTS_STATUS = mapped.length ? 'ok' : 'empty';
+  }catch(e){
+    PLANTS_STATUS='error'; PLANTS_LOG = log+'\nErreur : '+e.message;
+  }
+  renderPlants();
+}
+function renderPlants(){
+  const status = $('plantsStatus'), box = $('plantsDataBox');
+  if(PLANTS_STATUS==='idle' || PLANTS_STATUS==='loading'){
+    status.textContent = 'Chargement du stock FABRICATION…';
+    box.classList.add('hidden');
+    return;
+  }
+  if(PLANTS_STATUS==='error' || !PLANTS_ROWS.length){
+    status.innerHTML = '⚠️ Aucune donnée de stock exploitable trouvée pour l\'entrepôt FABRICATION (endpoint non confirmé côté BMS). Ouvrez 🔧 Diagnostic et envoyez-moi la section « DIAGNOSTIC PLANTS ».';
+    box.classList.add('hidden');
+    return;
+  }
+  const detected = PLANTS_ROWS.map(r=>({...r, detect:isPlantRow(r)})).filter(r=>r.detect.match);
+  const hasAnyQty = detected.some(r=>r.qty!=null);
+  status.innerHTML = 'Chargé automatiquement depuis BMS'+(PLANTS_META&&PLANTS_META.exported_at?' · '+esc(new Date(PLANTS_META.exported_at).toLocaleString('fr-FR')):'')
+    + (hasAnyQty ? '' : ' · <span style="color:var(--accent)">⚠️ quantité de stock pas encore disponible depuis cet endpoint — liste des plants détectés uniquement pour l\'instant</span>');
+  box.classList.remove('hidden');
+  const term = ($('plantsSearch').value||'').trim().toLowerCase();
+  const onlyStock = $('plantsOnlyStock').checked && hasAnyQty;
+  let rows = detected.filter(r=>{
+    if(onlyStock && !(toNum(r.qty)>0)) return false;
+    if(term){
+      const hay = [r.sku, r.name].map(x=>String(x??'').toLowerCase()).join(' ');
+      if(!hay.includes(term)) return false;
+    }
+    return true;
+  });
+  rows = rows.map(r=>({...r, wanted: plantsWantedQty(r.sku)}));
+  rows = rows.slice().sort((a,b)=>{
+    let va=a[plantsSortKey], vb=b[plantsSortKey];
+    if(plantsSortKey==='qty' || plantsSortKey==='wanted'){ va=toNum(va)??-Infinity; vb=toNum(vb)??-Infinity; return (va-vb)*plantsSortDir; }
+    va=String(va??''); vb=String(vb??'');
+    return va.localeCompare(vb, 'fr')*plantsSortDir;
+  });
+  const totalQty = rows.reduce((s,r)=>s+(toNum(r.qty)||0),0);
+  function wantedTotal(){ return rows.reduce((s,r)=>s+plantsWantedQty(r.sku),0); }
+  const kpis=[
+    {v:detected.length.toLocaleString('fr-FR'), l:'Plants détectés'},
+    {v:rows.length.toLocaleString('fr-FR'), l:'Affichés (filtre)'},
+    {v:totalQty.toLocaleString('fr-FR'), l:'Qté totale affichée'},
+    {v:detected.filter(r=>!(toNum(r.qty)>0)).length.toLocaleString('fr-FR'), l:'Sans stock'},
+    {v:wantedTotal().toLocaleString('fr-FR'), l:'Qté souhaitée (total)', id:'plantsWantedTotal'}
+  ];
+  $('plantsKpis').innerHTML = kpis.map(k=>`<div class="kpi"><div class="v"${k.id?` id="${k.id}"`:''}>${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+  function refreshWantedTotal(){ const el=$('plantsWantedTotal'); if(el) el.textContent = wantedTotal().toLocaleString('fr-FR'); }
+  const cols=[['sku','SKU'],['name','Produit'],['qty','Qté disponible',1],['wanted','Qté souhaitée',1],['detect','Détecté via']];
+  $('plantsThead').innerHTML = cols.map(c=>{
+    const a = plantsSortKey===c[0] ? (plantsSortDir===1?'▲':'▼') : '';
+    return `<th data-k="${c[0]}"${c[2]?' style="text-align:right"':''}>${c[1]}<span class="arrow">${a}</span></th>`;
+  }).join('');
+  $('plantsThead').querySelectorAll('th[data-k]').forEach(th=>{
+    th.onclick=()=>{ const k=th.dataset.k; if(k==='detect') return; if(plantsSortKey===k) plantsSortDir*=-1; else { plantsSortKey=k; plantsSortDir = k==='qty'||k==='wanted'?-1:1; } renderPlants(); };
+  });
+  const tb = $('plantsTbody');
+  if(!rows.length){ tb.innerHTML=''; $('plantsEmpty').classList.remove('hidden'); }
+  else{
+    $('plantsEmpty').classList.add('hidden');
+    tb.innerHTML = rows.map(r=>{
+      const badges = [r.detect.byName?'Nom':'', r.detect.bySup?'Fournisseur':'', r.detect.byCategory?'Catégorie':'', r.detect.bySku?'SKU (info)':''].filter(Boolean).join(', ');
+      return '<tr>'+
+        `<td>${esc(r.sku)}</td>`+
+        `<td>${esc(r.name)}</td>`+
+        `<td class="num">${fmtNum(r.qty)}</td>`+
+        `<td class="num"><input type="number" min="0" step="1" class="wanted-input" data-sku="${escAttr(r.sku)}" value="${r.wanted||''}" style="width:64px;text-align:right"> <button type="button" class="wanted-plus" data-sku="${escAttr(r.sku)}" title="Ajouter 5">+5</button></td>`+
+        `<td>${esc(badges)}</td>`+
+      '</tr>';
+    }).join('');
+    tb.querySelectorAll('.wanted-input').forEach(inp=>{
+      inp.oninput = inp.onchange = ()=>{ setPlantsWanted(inp.dataset.sku, inp.value); refreshWantedTotal(); };
+    });
+    tb.querySelectorAll('.wanted-plus').forEach(btn=>{
+      btn.onclick = ()=>{
+        const inp = btn.previousElementSibling;
+        const next = plantsWantedQty(btn.dataset.sku) + 5;
+        if(inp) inp.value = next;
+        setPlantsWanted(btn.dataset.sku, next);
+        refreshWantedTotal();
+      };
+    });
+  }
+  $('plantsCount').textContent = rows.length+' ligne'+(rows.length>1?'s':'');
+}
+const ORD_LIMIT=200;
+async function fetchOrdersPage(offset){
+  const r=await fetch(BASE.replace(/\/$/,'')+'/v2/sales/orders?limit='+ORD_LIMIT+'&offset='+offset,{headers:{'Authorization':'Bearer '+TOKEN}});
+  if(r.status===401) throw new Error('Session expirée. Reconnectez-vous.');
+  if(!r.ok) throw new Error('Erreur commandes clients : HTTP '+r.status);
+  const j=await r.json();
+  return {rows:extractRows(j), raw:j};
+}
+function orderTime(o){ const t=new Date(o&&(o.created_at||o.updated_at)||0).getTime(); return isNaN(t)?0:t; }
+function rawTotal(j){ if(!j||typeof j!=='object') return null; return j.total||j.count||(j.meta&&(j.meta.total||j.meta.count))||(j.pagination&&(j.pagination.total||j.pagination.count))||null; }
+
+async function loadToShip(){
+  const st={raw:0, statuses:{}, inv:false, shipYes:0, shipNo:0, item:null, firstDate:'', lastDate:'', method:''};
+  const all=[], seen=new Set();
+  const eat=rows=>rows.forEach(o=>{ st.raw++; const s=String(o.status||'?'); st.statuses[s]=(st.statuses[s]||0)+1;
+    if(Array.isArray(o.invoices)&&o.invoices.length>0) st.inv=true;
+    if(isShipped(o)) st.shipYes++; else st.shipNo++;
+    if(!st.item&&Array.isArray(o.items)&&o.items[0]) st.item=o.items[0]; });
+  const take=rows=>rows.filter(isToShip).forEach(o=>{ const k=String(o.reference||o.id); if(!seen.has(k)){ seen.add(k); all.push(o); } });
+
+  const p0=await fetchOrdersPage(0); eat(p0.rows);
+  if(p0.rows[0]) st.firstDate=p0.rows[0].created_at||'';
+  if(p0.rows.length) st.lastDate=p0.rows[p0.rows.length-1].created_at||'';
+
+  if(p0.rows.length<ORD_LIMIT){ take(p0.rows); st.method='page unique'; }
+  else {
+    const desc = orderTime(p0.rows[0])>=orderTime(p0.rows[p0.rows.length-1]);
+    if(desc){
+      st.method='tri décroissant (récent→ancien)';
+      take(p0.rows); let foundAny=all.length>0, offset=ORD_LIMIT, pages=1;
+      while(pages++<45){
+        const p=await fetchOrdersPage(offset); eat(p.rows); if(p.rows.length) st.lastDate=p.rows[p.rows.length-1].created_at||'';
+        const before=all.length; take(p.rows); const got=all.length-before;
+        if(p.rows.length<ORD_LIMIT) break;
+        if(got>0) foundAny=true; else if(foundAny) break;
+        offset+=ORD_LIMIT;
+      }
+    } else {
+      st.method='tri croissant (ancien→récent) → lecture depuis la fin';
+      // trouver l'offset de la dernière page
+      let endOffset; const total=rawTotal(p0.raw);
+      if(total){ endOffset=Math.floor((total-1)/ORD_LIMIT)*ORD_LIMIT; }
+      else {
+        let lo=0, hi=ORD_LIMIT;
+        while(hi<5000000){ const p=await fetchOrdersPage(hi); if(p.rows.length===0) break; lo=hi; hi*=2; }
+        let a=lo, b=hi;
+        while(b-a>ORD_LIMIT){ const mid=Math.floor((a+b)/2/ORD_LIMIT)*ORD_LIMIT; const p=await fetchOrdersPage(mid); if(p.rows.length>0) a=mid; else b=mid; }
+        endOffset=a;
+      }
+      let foundAny=false, off=endOffset, pages=0;
+      while(off>=0 && pages++<60){
+        const p=await fetchOrdersPage(off); eat(p.rows);
+        if(p.rows[0]){ const d=p.rows[0].created_at||''; if(d&&(!st.firstDate||d>st.firstDate)) st.firstDate=d; }
+        const before=all.length; take(p.rows); const got=all.length-before;
+        if(got>0) foundAny=true; else if(foundAny) break;
+        off-=ORD_LIMIT;
+      }
+    }
+  }
+  PAYSIG=st.inv;
+  const paidN=all.filter(isPaid).length;
+  DIAG.orders='/v2/sales/orders → '+st.raw+' lue(s) ['+st.method+', du '+fmtDate(st.firstDate)+' au '+fmtDate(st.lastDate)+'], '+all.length+' non expédiées ('+st.shipYes+' avec shipment / '+st.shipNo+' sans) dont '+paidN+' payées à expédier · statuts: '+Object.entries(st.statuses).map(([k,v])=>k+':'+v).join(', ')+' · facturation:'+(st.inv?'oui':'non')+(st.item?' · champs item: '+Object.keys(st.item).join(','):'');
+  return all;
+}
+
+function fulfillLabel(o){
+  if(isShipped(o)) return 'Expédiée';
+  return isPaid(o) ? 'À expédier' : 'En attente de paiement';
+}
+function normOrder(o){ return {ref:o.reference||o.id||'', date:o.created_at||'', status:fulfillLabel(o), cust:custName(o), qty:orderToShipQty(o)}; }
+function renderOrderTable(list, theadId, tbodyId, emptyId){
+  const cols=[['date','Date'],['age','Retard'],['ref','Référence'],['cust','Client'],['qty','Art.'],['status','Statut']];
+  $(theadId).innerHTML=cols.map(c=>`<th${c[0]==='qty'?' style="text-align:right"':''}>${c[1]}</th>`).join('');
+  const tb=$(tbodyId);
+  if(!list.length){ tb.innerHTML=''; if(emptyId)$(emptyId).classList.remove('hidden'); return; }
+  if(emptyId)$(emptyId).classList.add('hidden');
+  tb.innerHTML=list.map(o=>{ const d=daysSince(o.date); const old=d!=null&&d>=7;
+    return '<tr>'+
+      `<td>${fmtDate(o.date)}</td>`+
+      `<td${old?' class="old"':''}>${d==null?'':d+' j'}</td>`+
+      `<td>${esc(o.ref)}</td>`+
+      `<td>${esc(o.cust)}</td>`+
+      `<td class="num">${o.qty==null?'—':fmtNum(o.qty)}</td>`+
+      `<td>${esc(o.status)}</td></tr>`;
+  }).join('');
+}
+function renderClients(){
+  const term=($('clientsSearch').value||'').trim().toLowerCase();
+  const stVal=$('clientsStatusFilter').value;
+  const whSel=$('clientsWarehouseFilter');
+  const whVal=whSel.value;
+  const whOptions=[...new Set(PREP_ORDERS.map(o=>o.warehouse).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  const whHtml='<option value="">Tous les entrepôts</option>'+whOptions.map(w=>`<option value="${escAttr(w)}">${esc(w)}</option>`).join('');
+  if(whSel.innerHTML!==whHtml){ whSel.innerHTML=whHtml; whSel.value=whOptions.includes(whVal)?whVal:''; }
+  const whValFinal=whSel.value;
+  let list=PREP_ORDERS.filter(o=>{
+    if(stVal && o.bucket!==stVal) return false;
+    if(whValFinal && o.warehouse!==whValFinal) return false;
+    if(term){
+      const hay=[o.ref,o.cust,o.warehouse].map(x=>String(x??'').toLowerCase()).join(' ');
+      if(!hay.includes(term)) return false;
+    }
+    return true;
+  });
+  list=[...list].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const totalArt=list.reduce((s,o)=>s+(toNum(o.qty)||0),0);
+  const nPa=PREP_ORDERS.filter(o=>o.bucket==='Partielle').length;
+  const nEp=PREP_ORDERS.filter(o=>o.bucket==='Épuisée').length;
+  const nBl=PREP_ORDERS.filter(o=>o.bucket==='Bloquée').length;
+  const kpis=[
+    {v:PREP_ORDERS.length.toLocaleString('fr-FR'), l:'Commandes en attente'},
+    {v:nPa.toLocaleString('fr-FR'), l:'🟡 Partielles'},
+    {v:nEp.toLocaleString('fr-FR'), l:'⏳ Épuisées'},
+    {v:nBl.toLocaleString('fr-FR'), l:'🔴 Bloquées'}
+  ];
+  $('clientsKpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+  $('clientsCount').textContent=list.length+' commande'+(list.length>1?'s':'')+(totalArt?' · '+fmtNum(totalArt)+' art.':'');
+  const cols=[['date','Date'],['age','Attente'],['ref','Référence'],['cust','Client'],['qty','Art.'],['warehouse','Entrepôt'],['bucket','Statut'],['missing','Article(s) manquant(s)']];
+  $('clientsThead').innerHTML='<th style="width:30px"></th>'+cols.map(c=>`<th${c[0]==='qty'?' style="text-align:right"':''}>${c[1]}</th>`).join('');
+  const tb=$('clientsTbody');
+  if(!list.length){
+    tb.innerHTML='';
+    $('clientsEmpty').classList.remove('hidden');
+    $('clientsEmpty').innerHTML=!CLIENTS_READY?'Chargement en cours…':(PREP_ORDERS.length?'Aucune commande pour ce filtre.':'Aucune commande partielle, épuisée ou bloquée en attente de marchandise. 🎉');
+    return;
+  }
+  $('clientsEmpty').classList.add('hidden');
+  const badge=b=>{ const cls=b==='Bloquée'?'no':b==='Épuisée'?'mid':'ok'; const ic=b==='Bloquée'?'🔴':b==='Épuisée'?'⏳':'🟡'; return `<span class="pill ${cls}">${ic} ${esc(b)}</span>`; };
+  tb.innerHTML=list.map(o=>{
+    const d=daysSince(o.date); const old=d!=null&&d>=7;
+    const info=orderStockInfo({items:o.items});
+    let missTxt='—';
+    if(info.missing && info.missing.length){
+      missTxt=info.missing.map(m=>esc(m.name||m.sku||'?')+(m.manque!=null?' ('+fmtNum(m.manque)+')':'')).join(', ');
+    } else if(!o.items || !o.items.length){
+      missTxt='<span style="color:var(--muted)">détail non fourni par BMS</span>';
+    } else if(info.cat===null){
+      missTxt='<span style="color:var(--muted)">quantités réservées non exposées</span>';
+    }
+    const open=CLIENTS_EXPANDED.has(o.ref);
+    const mainRow='<tr class="clickable" data-ref="'+escAttr(o.ref)+'">'+
+      `<td class="tog">${open?'−':'+'}</td>`+
+      `<td>${fmtDate(o.date)}</td>`+
+      `<td${old?' class="old"':''}>${d==null?'':d+' j'}</td>`+
+      `<td>${esc(o.ref)}</td>`+
+      `<td>${o.cust?esc(o.cust):'<span style="color:var(--muted)">—</span>'}</td>`+
+      `<td class="num">${o.qty==null?'—':fmtNum(o.qty)}</td>`+
+      `<td>${esc(o.warehouse)}</td>`+
+      `<td>${badge(o.bucket)}</td>`+
+      `<td class="sumcell">${missTxt}</td></tr>`;
+    const detailRow=open?'<tr class="det"><td colspan="9">'+itemsDetailHtml(o.items)+'</td></tr>':'';
+    return mainRow+detailRow;
+  }).join('');
+  tb.querySelectorAll('tr.clickable').forEach(tr=>{ tr.onclick=()=>{ const ref=tr.dataset.ref; if(CLIENTS_EXPANDED.has(ref)) CLIENTS_EXPANDED.delete(ref); else CLIENTS_EXPANDED.add(ref); renderClients(); }; });
+}
+
+// ---- tableau de bord ----
+function orderStockInfo(o){
+  if(!Array.isArray(o.items)||!o.items.length) return {cat:null,missing:[]};
+  let known=false, anyReserved=false, anyMissing=false, missing=[];
+  o.items.forEach(it=>{
+    const q=toNum(it.qty), sh=toNum(it.qty_shipped);
+    const rem = (q!=null)? Math.max(0, q-(sh||0)) : (toNum(it.qty_to_ship)||0);
+    if(rem<=0) return;
+    const res=toNum(it.qty_reserved); if(res==null) return;
+    known=true;
+    if(res>=rem) anyReserved=true;
+    else { anyMissing=true; if(res>0) anyReserved=true; missing.push({sku:it.sku, name:it.product||it.sku, manque:rem-(res||0)}); }
+  });
+  if(!known) return {cat:null,missing:[]};
+  return {cat: anyMissing?(anyReserved?'partielle':'rupture'):'ok', missing};
+}
+function renderHome(){
+  const now=Date.now(), in30=now+31*86400000, ago21=now-21*86400000;
+  const miniList = g => `<div class="mini">${g.nature_cat==='hors'?'📦':'🌱'} <span class="d">${fmtDate(g.date)}</span> · ${esc(g.supplier||'—')}<div class="n">${esc(g.summary||'(sans détail)')}</div></div>`;
+  const split = arr => { const s=arr.filter(g=>g.nature_cat!=='hors').length; return '🌱 '+s+' semences / 📦 '+(arr.length-s)+' hors'; };
+  // prochains arrivages 30j (attendus, avec nature)
+  const up=buildGroups(FLAT.filter(r=>{const t=new Date(r.eta).getTime(); return !isNaN(t)&&t>=now-86400000&&t<=in30;}));
+  up.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const upVal=up.reduce((s,g)=>s+(g.value||0),0);
+  $('homeUpcoming').innerHTML='<div class="hc-sub" style="margin-bottom:8px"><strong>'+up.length+'</strong> commande(s) · '+split(up)+' · '+Math.round(upVal).toLocaleString('fr-FR')+' € (coût)</div>'+
+    (up.length? up.slice(0,12).map(miniList).join('') : '<div class="hc-sub">Aucun arrivage prévu sous 30 jours.</div>');
+  // dernières réceptions 3 sem (avec nature)
+  const rec=buildRecGroups(RECEIVED.filter(r=>{const t=new Date(r.date).getTime(); return !isNaN(t)&&t>=ago21;}));
+  rec.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const recVal=rec.reduce((s,g)=>s+(g.value||0),0);
+  $('homeRecent').innerHTML='<div class="hc-sub" style="margin-bottom:8px"><strong>'+rec.length+'</strong> réception(s) · '+split(rec)+' · '+Math.round(recVal).toLocaleString('fr-FR')+' € (coût)</div>'+
+    (rec.length? rec.slice(0,12).map(miniList).join('') : '<div class="hc-sub">Aucune réception sur 3 semaines.</div>');
+  // ---- cartes de synthèse cliquables (une par onglet) ----
+  const fabNew=FAB_ROWS.filter(r=>r.statut==='Nouveau').length;
+  const fabProg=FAB_ROWS.filter(r=>r.statut==='En cours').length;
+  const fabDone=FAB_ROWS.filter(r=>r.statut==='Terminé').length;
+  let fabFreshTxt='pas encore de donnée';
+  if(FAB_META && FAB_META.exported_at){
+    const hrs=(Date.now()-new Date(FAB_META.exported_at).getTime())/3600000;
+    fabFreshTxt = 'mis à jour '+(hrs<1?'à l\'instant':hrs<24?'il y a '+Math.round(hrs)+' h':'il y a '+Math.round(hrs/24)+' j');
+  }
+  const cPa=PREP_ORDERS.filter(o=>o.bucket==='Partielle').length;
+  const cEp=PREP_ORDERS.filter(o=>o.bucket==='Épuisée').length;
+  const cBl=PREP_ORDERS.filter(o=>o.bucket==='Bloquée').length;
+  const sumCards=[
+    {tab:'reception', ic:'📦', title:'Commandes fournisseurs en cours', big:up.length,
+      sub:(up.length? split(up)+' · '+Math.round(upVal).toLocaleString('fr-FR')+' € sous 30 j' : 'aucun arrivage prévu sous 30 j')},
+    {tab:'receptions', ic:'📥', title:'Réceptions ok', big:rec.length,
+      sub:(rec.length? split(rec)+' · '+Math.round(recVal).toLocaleString('fr-FR')+' € sur 3 sem.' : 'aucune réception sur 3 semaines')},
+    {tab:'fabrication', ic:'🏭', title:'Fabrication Sachets', big:FAB_ROWS.length,
+      sub:'🆕 '+fabNew+' · ⚙️ '+fabProg+' · ✅ '+fabDone+'<br>'+fabFreshTxt},
+    {tab:'clients', ic:'🚚', title:'Commandes clients en attente', big:CLIENTS_READY?PREP_ORDERS.length:null,
+      sub:CLIENTS_READY?('🟡 '+cPa+' partielles · ⏳ '+cEp+' épuisées · 🔴 '+cBl+' bloquées'):'chargement…'}
+  ];
+  $('homeSumGrid').innerHTML=sumCards.map(c=>
+    `<div class="sumcard" data-tab="${c.tab}">`+
+      `<div class="sc-top"><span class="sc-ic">${c.ic}</span><span class="sc-title">${esc(c.title)}</span></div>`+
+      `<div class="sc-big">${c.big==null?'…':c.big.toLocaleString('fr-FR')}</div>`+
+      `<div class="sc-sub">${c.sub}</div>`+
+      `<div class="sc-cta">Voir le détail →</div>`+
+    `</div>`
+  ).join('');
+  $('homeSumGrid').querySelectorAll('.sumcard').forEach(el=>{ el.onclick=()=>switchTab(el.dataset.tab); });
+  // commandes en rupture (épuisées) / partiellement livrables, à partir des commandes en attente de marchandise
+  const box=$('homeStock');
+  if(!CLIENTS_READY){ box.innerHTML='<div class="hc-sub">Chargement…</div>'; return; }
+  const stockRows=PREP_ORDERS.filter(o=>o.bucket==='Épuisée'||o.bucket==='Partielle')
+    .map(o=>({ref:o.ref, cust:o.cust, cat:o.bucket==='Épuisée'?'rupture':'partielle', missing:(orderStockInfo({items:o.items}).missing||[]), date:o.date, items:o.items}));
+  if(!stockRows.length){ box.innerHTML='<div class="hc-sub">Aucune commande en rupture ou partiellement livrable. 🎉</div>'; }
+  else{
+    stockRows.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    box.innerHTML=stockRows.slice(0,40).map(o=>{
+      const badge=o.cat==='rupture'?'<span class="pill no">⏳ Épuisée</span>':'<span class="pill mid">🟡 Partielle</span>';
+      const miss=o.missing.length?'<div class="miss">Manque : '+o.missing.map(m=>esc(m.name||m.sku||'?')+(m.manque!=null?' ('+fmtNum(m.manque)+')':'')).join(', ')+'</div>':'';
+      const open=HOME_STOCK_EXPANDED.has(o.ref);
+      const toggleTxt='<span style="float:right;color:var(--green-dark);font-size:12px;font-weight:600">'+(open?'▾ masquer le contenu':'▸ voir le contenu')+'</span>';
+      const detail=open?itemsDetailHtml(o.items):'';
+      return '<div class="stock-row" data-ref="'+escAttr(o.ref)+'"><strong>'+esc(o.ref)+'</strong> · '+(o.cust?esc(o.cust):'<span style="color:var(--muted)">—</span>')+' '+badge+toggleTxt+miss+detail+'</div>';
+    }).join('');
+    box.querySelectorAll('.stock-row').forEach(el=>{ el.onclick=()=>{ const ref=el.dataset.ref; if(HOME_STOCK_EXPANDED.has(ref)) HOME_STOCK_EXPANDED.delete(ref); else HOME_STOCK_EXPANDED.add(ref); renderHome(); }; });
+  }
+}
+
+// ---- onglet Réceptions (déjà reçues) ----
+function periodOk(dateStr, days){ if(!days) return true; const t=new Date(dateStr).getTime(); if(isNaN(t)) return true; return t>=(Date.now()-days*86400000); }
+// une commande fournisseur (po_reference) peut rester au statut "Attendue"/"Partiellement reçue" alors
+// qu'une partie est déjà arrivée : ce n'est pas un bug, ça veut dire qu'il reste des lignes en attente
+// sur cette même commande. On le rend visible en croisant avec FLAT (les attendus, qui portent
+// qty_remaining par ligne) pour chaque référence de commande.
+function remainingByRef(){
+  const m=new Map();
+  FLAT.forEach(r=>{
+    const ref=r.po_reference; if(!ref) return;
+    const rem=toNum(r.qty_remaining)||0; if(rem<=0) return;
+    if(!m.has(ref)) m.set(ref, {qty:0, lines:[]});
+    const e=m.get(ref); e.qty+=rem; e.lines.push(r);
+  });
+  return m;
+}
+function buildRecGroups(rows){
+  const remMap = remainingByRef();
+  const map=new Map();
+  rows.forEach(r=>{ const key=(r.po_reference&&r.po_reference!=='')?String(r.po_reference):'(sans référence)';
+    if(!map.has(key)) map.set(key,{ref:key,supplier:r.supplier_name||'',status:r.status||'',date:r.date||'',supplier_reference:r.supplier_reference||'',comments:r.po_comments||'',items:[]});
+    const g=map.get(key); g.items.push(r);
+    if(!g.supplier&&r.supplier_name)g.supplier=r.supplier_name;
+    if(!g.date&&r.date)g.date=r.date;
+  });
+  const gs=[...map.values()];
+  gs.forEach(g=>{
+    g.count=g.items.length; g.qty=g.items.reduce((s,r)=>s+(toNum(r.qty_received)||0),0); g.value=g.items.reduce((s,r)=>s+((toNum(r.price)||0)*(toNum(r.qty_received)||0)),0); g.summary=summarizeGroup(g); let sN=0,hN=0; g.items.forEach(it=>isSeedItem(it)?sN++:hN++); g.nature_cat=hN>sN?'hors':'semences';
+    const rem = remMap.get(g.ref);
+    g.remaining = rem ? rem.qty : 0;
+    g.remainingLines = rem ? rem.lines : [];
+  });
+  return gs;
+}
+function buildRecFilters(){
+  const su=$('recSupplierFilter');
+  const vals=[...new Set(RECEIVED.map(r=>r.supplier_name).filter(Boolean))].sort();
+  if(vals.length>=2){ su.classList.remove('hidden'); su.innerHTML='<option value="">Tous les fournisseurs</option>'+vals.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${v}</option>`).join(''); su.onchange=renderReceptions; }
+  else su.classList.add('hidden');
+}
+function renderReceptions(){
+  const term=$('recSearch').value.trim().toLowerCase();
+  const days=parseInt($('recPeriod').value,10);
+  const supVal=$('recSupplierFilter').value, natVal=$('recNatureFilter').value;
+  let rows=RECEIVED.filter(r=>periodOk(r.date,days));
+  if(supVal) rows=rows.filter(r=>String(r.supplier_name||'')===supVal);
+  if(term) rows=rows.filter(r=>[r.sku,r.name,r.supplier_name,r.po_reference,r.supplier_reference].map(x=>String(x??'').toLowerCase()).join(' ').includes(term));
+  let groups=buildRecGroups(rows);
+  if(natVal) groups=groups.filter(g=>g.nature_cat===natVal);
+  groups.sort((a,b)=>{ let x=a[recSortKey],y=b[recSortKey]; if(['count','qty','value','remaining'].includes(recSortKey)){x=+x||0;y=+y||0;}else{x=String(x??'').toLowerCase();y=String(y??'').toLowerCase();} return x<y?-1*recSortDir:x>y?1*recSortDir:0; });
+  const shown=groups.flatMap(g=>g.items);
+  const totalQty=shown.reduce((s,r)=>s+(toNum(r.qty_received)||0),0);
+  const totalVal=shown.reduce((s,r)=>s+((toNum(r.price)||0)*(toNum(r.qty_received)||0)),0);
+  const kpis=[{v:groups.length.toLocaleString('fr-FR'),l:'Réceptions'},{v:shown.length.toLocaleString('fr-FR'),l:'Lignes reçues'},{v:totalQty.toLocaleString('fr-FR',{maximumFractionDigits:0}),l:'Quantité reçue'},{v:Math.round(totalVal).toLocaleString('fr-FR')+' €',l:'Valeur reçue (coût)'}];
+  $('recKpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+  const SUM=[['date','Date réception',0],['status','Statut',0],['ref','Réf. commande',0],['supplier','Fournisseur',0],['summary','Nature',0],['count','Lignes',1],['qty','Qté reçue',1],['remaining','Reste à recevoir',1],['value','Valeur (€)',1]];
+  $('recThead').innerHTML='<th style="width:36px"></th>'+SUM.map(c=>{const a=recSortKey===c[0]?(recSortDir===1?'▲':'▼'):'';return `<th data-k="${c[0]}"${c[2]?' style="text-align:right"':''}>${c[1]}<span class="arrow">${a}</span></th>`;}).join('');
+  $('recThead').querySelectorAll('th[data-k]').forEach(th=>{ th.onclick=()=>{const k=th.dataset.k; if(recSortKey===k)recSortDir*=-1; else{recSortKey=k;recSortDir=1;} renderReceptions();}; });
+  const tb=$('recTbody');
+  if(!groups.length){ tb.innerHTML=''; $('recEmpty').classList.remove('hidden'); }
+  else{ $('recEmpty').classList.add('hidden');
+    const autoExpand=!!term;
+    const det=[['sku','SKU',0],['name','Produit',0],['qty_received','Qté reçue',1],['price','Prix',1]];
+    let html='';
+    const detRem=[['sku','SKU',0],['name','Produit',0],['qty_remaining','Reste à recevoir',1],['eta','Date prévue',0]];
+    groups.forEach(g=>{ const open=autoExpand||recEXPANDED.has(g.ref);
+      const statusCell = g.remaining>0
+        ? `<span class="pill no" title="Reste ${fmtNum(g.remaining)} à recevoir sur cette commande">⏳ Partielle</span>`
+        : `<span class="pill ok">✅ Complète</span>`;
+      html+=`<tr class="grp${open?' open':''}" data-ref="${escAttr(g.ref)}"><td class="tog">${open?'−':'+'}</td>`+
+        `<td>${fmtDate(g.date)}</td><td>${statusCell} <span style="color:var(--muted);font-size:11px">${esc(statusLabel(g.status))}</span></td><td>${esc(g.ref)}</td><td>${esc(g.supplier)}</td>`+
+        `<td class="sumcell" title="${escAttr(g.summary)}">${esc(g.summary)}</td>`+
+        `<td class="num">${g.count}</td><td class="num">${g.qty.toLocaleString('fr-FR',{maximumFractionDigits:0})}</td>`+
+        `<td class="num">${g.remaining>0?fmtNum(g.remaining):'—'}</td>`+
+        `<td class="num">${Math.round(g.value).toLocaleString('fr-FR')} €</td></tr>`;
+      let sub='<div class="sub-wrap"><table class="sub"><thead><tr>'+det.map(d=>`<th${d[2]?' style="text-align:right"':''}>${d[1]}</th>`).join('')+'</tr></thead><tbody>'+
+        g.items.map(it=>'<tr>'+det.map(d=>{let v=it[d[0]]; if(d[2])return `<td class="num">${v==null||v===''?'':fmtNum(v)}</td>`; return `<td>${v==null?'':esc(v)}</td>`;}).join('')+'</tr>').join('')+'</tbody></table>';
+      if(g.remainingLines && g.remainingLines.length){
+        sub += '<div style="margin:10px 0 6px;font-size:12px;color:var(--muted);font-weight:600">⏳ Reste à recevoir sur cette commande ('+g.remainingLines.length+' ligne'+(g.remainingLines.length>1?'s':'')+') :</div>';
+        sub += '<table class="sub"><thead><tr>'+detRem.map(d=>`<th${d[2]?' style="text-align:right"':''}>${d[1]}</th>`).join('')+'</tr></thead><tbody>'+
+          g.remainingLines.map(it=>'<tr>'+detRem.map(d=>{let v=it[d[0]]; if(d[0]==='eta') return `<td>${v?fmtDate(v):''}</td>`; if(d[2])return `<td class="num">${v==null||v===''?'':fmtNum(v)}</td>`; return `<td>${v==null?'':esc(v)}</td>`;}).join('')+'</tr>').join('')+'</tbody></table>';
+      }
+      sub += '</div>';
+      html+=`<tr class="det" data-ref="${escAttr(g.ref)}"${open?'':' style="display:none"'}><td colspan="10">${sub}</td></tr>`;
+    });
+    tb.innerHTML=html;
+    tb.querySelectorAll('tr.grp').forEach(tr=>{ tr.onclick=()=>{const ref=tr.dataset.ref; if(recEXPANDED.has(ref))recEXPANDED.delete(ref);else recEXPANDED.add(ref); renderReceptions();}; });
+  }
+  $('recCount').textContent=groups.length+' réception'+(groups.length>1?'s':'')+' · '+shown.length+' ligne'+(shown.length>1?'s':'');
+}
+
+function buildTrackingUrl(num, carrier){
+  const n=encodeURIComponent(String(num).trim()); const c=(carrier||'').toLowerCase();
+  if(/colissimo|la ?poste/.test(c)) return 'https://www.laposte.fr/outils/suivre-vos-envois?code='+n;
+  if(/chronopost/.test(c)) return 'https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLES='+n;
+  if(/mondial ?relay/.test(c)) return 'https://www.mondialrelay.fr/suivi-de-colis/?numeroExpedition='+n;
+  if(/\bups\b/.test(c)) return 'https://www.ups.com/track?tracknum='+n;
+  if(/\bdhl\b/.test(c)) return 'https://www.dhl.com/fr-fr/home/tracking.html?tracking-id='+n;
+  if(/\bdpd\b/.test(c)) return 'https://www.dpd.fr/trace/'+n;
+  if(/\bgls\b/.test(c)) return 'https://gls-group.com/FR/fr/suivi-colis?match='+n;
+  if(/colis ?priv/.test(c)) return 'https://www.colisprive.fr/moncolis/pages/detailColis.aspx?numColis='+n;
+  return 'https://t.17track.net/fr#nums='+n; // universel (détection auto)
+}
+function openOrderLookup(ref, inputId, resultId){
+  if(!ref) return;
+  $(inputId).value=ref;
+  searchOrder(inputId, resultId);
+  $(inputId).scrollIntoView({behavior:'smooth', block:'center'});
+}
+async function searchOrder(inputId, resultId){
+  const ref=$(inputId).value.trim(); const box=$(resultId);
+  if(!ref){ box.innerHTML=''; return; }
+  box.innerHTML='<span style="color:var(--muted)">Recherche…</span>';
+  try{
+    const r=await fetch(BASE.replace(/\/$/,'')+'/sales/orders/reference/'+encodeURIComponent(ref), {headers:{'Authorization':'Bearer '+TOKEN}});
+    if(r.status===404||r.status===400){ box.innerHTML='<span class="pill no">Commande introuvable</span>'; return; }
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    let o=await r.json(); if(o && o.data && !o.reference) o=o.data;
+    renderOrderResult(o, resultId);
+  }catch(e){ box.innerHTML='<span class="pill no">Erreur : '+esc(e.message)+'</span>'; }
+}
+function renderOrderResult(o, resultId){
+  const shipments=o.shipments||[];
+  const trk=[]; shipments.forEach(s=>(s.trackings||[]).forEach(t=>trk.push({num:t, carrier:s.method_description||s.method_code||''})));
+  const toShipQ=orderToShipQty(o);
+  const shipped = (toShipQ!=null)? toShipQ<=0 : (trk.length>0);
+  let h='<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:baseline">';
+  h+='<strong style="font-size:15px">'+esc(o.reference||o.id||'')+'</strong>';
+  if(custName(o)) h+='<span>'+esc(custName(o))+'</span>';
+  h+='<span class="pill '+(shipped?'ok':'no')+'">'+(shipped?'✅ Expédiée':'⏳ À expédier')+'</span>';
+  h+='<span style="color:var(--muted)">Statut : '+esc(statusLabel(o.status))+'</span>';
+  if(o.created_at) h+='<span style="color:var(--muted)">Créée le '+fmtDate(o.created_at)+'</span>';
+  h+='</div>';
+  if(trk.length){
+    h+='<div style="margin-top:12px"><div style="font-weight:600;font-size:13px;margin-bottom:2px">Suivi colis</div>';
+    trk.forEach(t=>{ const url=buildTrackingUrl(t.num,t.carrier); h+=`<a class="trk" href="${escAttr(url)}" target="_blank" rel="noopener">📦 ${esc(t.carrier||'Colis')} · ${esc(t.num)} ↗</a>`; });
+    h+='</div>';
+  } else if(shipped){
+    h+='<div style="margin-top:10px;color:var(--muted);font-size:13px">Expédiée, mais aucun numéro de suivi enregistré dans BMS.</div>';
+  } else {
+    h+='<div style="margin-top:10px;color:var(--muted);font-size:13px">Pas encore expédiée.</div>';
+  }
+  $(resultId).innerHTML=h;
+}
+
+// ---- onglet Fabrication (données chargées depuis un export local) ----
+function renderFabrication(){
+  const box=$('fabDataBox');
+  if(!FAB_ROWS.length){ box.classList.add('hidden'); $('fabMeta').textContent=''; return; }
+  box.classList.remove('hidden');
+  $('fabMeta').textContent='';
+  const fresh=$('fabFreshness');
+  if(FAB_META && FAB_META.exported_at){
+    const d=new Date(FAB_META.exported_at);
+    const hrs=(Date.now()-d.getTime())/3600000;
+    let cls='ok', label='à jour';
+    if(hrs>=48){ cls='no'; label='ancien'; } else if(hrs>=24){ cls='mid'; label='à rafraîchir'; }
+    fresh.innerHTML=`<span class="pill ${cls}">🕐 ${label}</span> <span style="color:var(--muted);font-size:13px">Dernière mise à jour : <strong>${esc(d.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}))}</strong></span>`;
+  } else {
+    fresh.innerHTML='';
+  }
+  const term=$('fabSearch').value.trim().toLowerCase();
+  const stVal=$('fabStatusFilter').value;
+  const rows=FAB_ROWS.filter(r=>{
+    if(stVal && r.statut!==stVal) return false;
+    if(term){
+      const hay=[r.sku,r.produit,r.reference,r.batch].map(x=>String(x??'').toLowerCase()).join(' ');
+      if(!hay.includes(term)) return false;
+    }
+    return true;
+  });
+  const kpis=[
+    {v:rows.length.toLocaleString('fr-FR'), l:'Ordres affichés'},
+    {v:FAB_ROWS.filter(r=>r.statut==='Nouveau').length.toLocaleString('fr-FR'), l:'🆕 Nouveau'},
+    {v:FAB_ROWS.filter(r=>r.statut==='En cours').length.toLocaleString('fr-FR'), l:'⚙️ En cours'},
+    {v:FAB_ROWS.filter(r=>r.statut==='Terminé').length.toLocaleString('fr-FR'), l:'✅ Terminé'}
+  ];
+  $('fabKpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+  const cols=[['date','Date'],['reference','Référence'],['batch','Batch'],['sku','SKU'],['produit','Produit'],['qte_a_produire','Qté à produire',1],['qte_produite','Qté produite',1],['statut','Statut']];
+  $('fabThead').innerHTML=cols.map(c=>`<th${c[2]?' style="text-align:right"':''}>${c[1]}</th>`).join('');
+  const tb=$('fabTbody');
+  if(!rows.length){ tb.innerHTML=''; $('fabEmpty').classList.remove('hidden'); }
+  else{
+    $('fabEmpty').classList.add('hidden');
+    tb.innerHTML=rows.map(r=>'<tr>'+cols.map(c=>{
+      if(c[0]==='statut'){ const cls=r.statut==='Nouveau'?'no':r.statut==='En cours'?'mid':'ok'; return `<td><span class="pill ${cls}">${esc(r.statut)}</span></td>`; }
+      if(c[2]) return `<td class="num">${fmtNum(r[c[0]])}</td>`;
+      return `<td>${esc(r[c[0]])}</td>`;
+    }).join('')+'</tr>').join('');
+  }
+  $('fabCount').textContent=rows.length+' ligne'+(rows.length>1?'s':'');
+}
+const FAB_STATUS_LABEL = {new:'Nouveau', in_progress:'En cours', complete:'Terminé'};
+async function loadFabricationAuto(){
+  try{
+    const raw = await fetchAllParallel('/v2/manufacturing', TOKEN);
+    FAB_ROWS = raw.map(r=>({
+      date: r.created_at || '',
+      reference: r.reference || '',
+      batch: r.batch_number || '',
+      sku: r.sku || '',
+      produit: r.name || '',
+      qte_a_produire: r.qty_to_produce,
+      qte_produite: r.qty_produced,
+      statut: FAB_STATUS_LABEL[r.status] || r.status || ''
+    }));
+    FAB_META = {exported_at: new Date().toISOString()};
+    try{ localStorage.setItem('bms_fab_export', JSON.stringify({rows:FAB_ROWS, exported_at:FAB_META.exported_at})); }catch(e){}
+    return true;
+  }catch(e){
+    FAB_ERR = e.message;
+    return false;
+  }
+}
+
+// ---------- events ----------
+$('tabBtnHome').onclick=()=>switchTab('home');
+$('tabBtnReception').onclick=()=>switchTab('reception');
+$('tabBtnReceptions').onclick=()=>switchTab('receptions');
+$('tabBtnFabrication').onclick=()=>switchTab('fabrication');
+$('fabSearch').oninput=renderFabrication;
+$('fabStatusFilter').onchange=renderFabrication;
+$('fabRefreshBtn').onclick=async()=>{
+  $('fabRefreshBtn').textContent='…';
+  const ok=await loadFabricationAuto();
+  $('fabRefreshBtn').textContent='↻ Recharger';
+  renderFabrication();
+  if(!ok) alert("Erreur de chargement des ordres de fabrication"+(FAB_ERR?' : '+FAB_ERR:'')+".");
+};
+renderFabrication();
+$('tabBtnClients').onclick=()=>switchTab('clients');
+$('tabBtnPlants').onclick=()=>switchTab('plants');
+$('plantsSearch').oninput=renderPlants;
+$('plantsOnlyStock').onchange=renderPlants;
+$('plantsExportBtn').onclick=exportPlantsCSV;
+$('plantsResetBtn').onclick=resetPlantsWanted;
+renderPlants();
+$('orderSearchBtn').onclick=()=>searchOrder('orderSearch','orderResult');
+$('orderSearch').addEventListener('keydown',e=>{ if(e.key==='Enter') searchOrder('orderSearch','orderResult'); });
+$('clientsSearch').oninput=renderClients;
+$('clientsStatusFilter').onchange=renderClients;
+$('clientsWarehouseFilter').onchange=renderClients;
+$('homeOrderSearchBtn').onclick=()=>searchOrder('homeOrderSearch','homeOrderResult');
+$('homeOrderSearch').addEventListener('keydown',e=>{ if(e.key==='Enter') searchOrder('homeOrderSearch','homeOrderResult'); });
+$('recSearch').oninput=renderReceptions;
+$('recPeriod').onchange=renderReceptions;
+$('recNatureFilter').onchange=renderReceptions;
+$('loginBtn').onclick=async()=>{
+  const base=$('server').value.trim(), username=$('username').value.trim(), password=$('password').value;
+  $('loginErr').style.display='none';
+  if(!password){ $('loginErr').textContent='Veuillez saisir le mot de passe.'; $('loginErr').style.display='block'; return; }
+  $('loginBtn').textContent='Connexion…'; $('loginBtn').disabled=true;
+  try{
+    TOKEN=await getToken(base,username,password); BASE=base;
+    if($('remember').checked){ try{ localStorage.setItem('bms_prefs',JSON.stringify({server:base,username})); }catch(e){} }
+    else { try{ localStorage.removeItem('bms_prefs'); }catch(e){} }
+    $('password').value=''; await loadData();
+  }catch(e){ $('loginErr').textContent=e.message; $('loginErr').style.display='block'; }
+  finally{ $('loginBtn').textContent='Se connecter et charger les attendus'; $('loginBtn').disabled=false; }
+};
+$('password').addEventListener('keydown',e=>{ if(e.key==='Enter') $('loginBtn').click(); });
+function showDiag(){
+  const cols = COLUMNS.join(', ');
+  let t = '=== DIAGNOSTIC BMS ATTENDUS ===\n';
+  t += 'Lignes attendues: '+DIAG.count+'\n';
+  t += 'Fournisseurs: '+(DIAG.suppliers||'(non chargés)')+'\n';
+  t += 'Commandes fourn.: '+(DIAG.pos||'(non chargées)')+'\n';
+  t += 'Commandes clients: '+(DIAG.orders||'(non chargées)')+'\n';
+  t += 'Préparation (buckets): '+(DIAG.prep||'(non sondée)')+'\n';
+  t += 'Exemple commande en attente (brute): '+(DIAG.prepSample||'(aucune)')+'\n';
+  t += 'Clés détectées → QTY:'+QTY_KEY+' | SUPPLIER:'+SUPPLIER_KEY+' | STATUS:'+STATUS_KEY+' | PO:'+PO_KEY+'\n';
+  t += 'Colonnes (aplaties): '+cols+'\n\n';
+  t += 'PREMIÈRE LIGNE (brute) :\n'+JSON.stringify(DIAG.firstRow, null, 1);
+  t += '\n\n=== DIAGNOSTIC PLANTS (stock FABRICATION, sondage auto) ===\n';
+  t += 'Statut: '+PLANTS_STATUS+' | lignes retenues: '+PLANTS_ROWS.length+' | plants détectés: '+PLANTS_ROWS.filter(r=>isPlantRow(r).match).length+'\n';
+  t += (PLANTS_LOG||'(onglet Plants pas encore chargé)');
+  $('diagText').value = t;
+  $('diagPanel').classList.toggle('hidden');
+}
+$('diagBtn').onclick=showDiag;
+$('closeDiag').onclick=()=>$('diagPanel').classList.add('hidden');
+$('copyDiag').onclick=()=>{ $('diagText').select(); try{document.execCommand('copy');}catch(e){} navigator.clipboard&&navigator.clipboard.writeText($('diagText').value); };
+$('search').oninput=render;
+$('showIds').onchange=render;
+$('natureFilter').onchange=render;
+$('refreshBtn').onclick=loadData;
+$('exportBtn').onclick=exportCurrentTabCSV;
+$('logoutBtn').onclick=()=>{ TOKEN=null; FLAT=[]; RECEIVED=[]; TOSHIP=[]; PREP_ORDERS=[]; CLIENTS_READY=false; $('tabsBar').style.display='none'; switchTab('home'); $('dashView').classList.add('hidden'); $('loginView').classList.remove('hidden'); };
+</script>
+</body>
+</html>

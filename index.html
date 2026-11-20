@@ -261,24 +261,17 @@
       <div class="foot">Réceptions déduites des commandes fournisseurs (lignes avec quantité reçue) · date = dernière mise à jour de la commande · « ⏳ Partielle » = il reste des lignes non reçues sur cette même commande (voir « Reste à recevoir » en dépliant la ligne) · « ✅ Complète » = plus rien en attente pour cette commande</div>
     </div>
 
-    <!-- TAB FABRICATION (provisoire : pas d'endpoint REST disponible côté BMS) -->
+    <!-- TAB FABRICATION (endpoint REST BMS /v2/manufacturing, ouvert par BoostMyShop nov. 2026 — chargement 100% auto comme les autres onglets) -->
     <div id="tab-fabrication" class="hidden">
       <div class="hcard">
         <div class="hc-t">🏭 Ordres de fabrication</div>
         <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <button class="btn small ghost" id="fabScriptBtn" type="button">📋 Copier le script d'export</button>
           <a class="btn small ghost" style="display:inline-block;text-decoration:none;text-align:center"
              href="https://us1.erp.boostmyshop.com/admin/advancedstock/manufacturing/" target="_blank" rel="noopener">
             🏭 Ouvrir Fabrication dans BMS ↗
           </a>
           <button class="btn small ghost" id="fabRefreshBtn" type="button">↻ Recharger</button>
-          <label class="btn small ghost" style="cursor:pointer;margin:0">📂 Charger un fichier manuellement (secours)
-            <input type="file" id="fabFileInput" accept="application/json" style="display:none">
-          </label>
           <span class="count" id="fabMeta"></span>
-        </div>
-        <div class="hc-sub" style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)">
-          <strong>Mise à jour (en attendant mieux)</strong> : 1) copier le script ci-dessus · 2) créer un favori Chrome et coller le script dans son URL · 3) se placer sur BMS, dans Inventaire → Fabrication → onglet Fabrication · 4) cliquer sur ce favori. L'export se fait et la donnée se met à jour pour tout le monde.
         </div>
       </div>
       <div id="fabDataBox" class="hidden">
@@ -373,13 +366,12 @@ try{
   if(saved.username) $('username').value = saved.username;
 }catch(e){}
 
-// ---------- Fabrication (export local, en attendant l'API) ----------
-let FAB_ROWS=[], FAB_META=null;
+// ---------- Fabrication (endpoint REST BMS /v2/manufacturing) ----------
+let FAB_ROWS=[], FAB_META=null, FAB_ERR=null;
 try{
   const savedFab = JSON.parse(localStorage.getItem('bms_fab_export')||'null');
   if(savedFab && Array.isArray(savedFab.rows)){ FAB_ROWS=savedFab.rows; FAB_META={exported_at:savedFab.exported_at}; }
 }catch(e){}
-const FAB_EXPORT_SCRIPT = "javascript:(function(){function w(m){return new Promise(function(r){setTimeout(r,m);});}function gc(){return[].slice.call(document.querySelectorAll('.bms-admingrid-wrapper')).find(function(c){return /Batch Number/i.test(c.textContent);});}function readRows(c,st,L){var t=c.querySelector('table');var trs=[].slice.call(t.querySelectorAll('tbody tr'));return trs.map(function(tr){function g(cls){var e=tr.querySelector('.'+cls);return e?e.textContent.trim():'';}return{statut:L[st]||st,date:g('column-bm_created_at'),reference:g('column-bm_reference'),batch:g('column-bm_batch_number'),sku:g('column-sku'),produit:g('column-name'),qte_a_produire:g('column-bm_qty_to_produce'),qte_produite:g('column-bm_qty_produced')};});}function looksEmpty(rows){return rows.length>0&&rows.every(function(r){return !r.reference&&!r.sku&&!r.produit;});}async function readWithRetry(c,st,L){var rows=readRows(c,st,L);var tries=0;while(looksEmpty(rows)&&tries<5){await w(1800);c=gc();rows=readRows(c,st,L);tries++;}return rows;}var COMPLETE_CAP=500;var c=gc();if(!c){alert(\"Ouvrez d'abord Inventaire > Fabrication > onglet Fabrication dans BMS.\");return;}var L={new:'Nouveau',in_progress:'En cours',complete:'Terminé'};var inc=confirm(\"Inclure aussi les ordres Terminés ? (limité aux \"+COMPLETE_CAP+\" plus récents)\\nOK = oui, Annuler = seulement Nouveau + En cours\");var sts=inc?['new','in_progress','complete']:['new','in_progress'];(async function(){var pp=[].slice.call(c.querySelectorAll('select')).find(function(s){return[].slice.call(s.options).some(function(o){return /par page/i.test(o.text);});});pp.value='200';pp.dispatchEvent(new Event('change',{bubbles:true}));await w(2500);var all=[];for(var i=0;i<sts.length;i++){var st=sts[i];c=gc();var ss=[].slice.call(c.querySelectorAll('select')).find(function(s){return[].slice.call(s.options).some(function(o){return /nouveau/i.test(o.text);});});ss.value=st;ss.dispatchEvent(new Event('change',{bubbles:true}));await w(500);var sb=[].slice.call(c.querySelectorAll('button')).find(function(b){return b.textContent.trim()==='Recherche';});sb.click();await w(4000);var guard=0;var statusCount=0;while(guard++<60){c=gc();var rows=await readWithRetry(c,st,L);rows=rows.filter(function(r){return r.reference||r.sku||r.produit;});all=all.concat(rows);statusCount+=rows.length;if(st==='complete'&&statusCount>=COMPLETE_CAP)break;var nb=[].slice.call(c.querySelectorAll('button')).find(function(b){return b.className.indexOf('bms-action-next')>-1;});if(!nb||nb.className.indexOf('disabled')>-1)break;nb.click();await w(3000);}}try{var res=await fetch('https://bms-suivi.netlify.app/api/fabrication',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer BKM825mckjBKsPKRTCpc3mqlO75OP9Zx'},body:JSON.stringify({exported_at:new Date().toISOString(),rows:all})});if(res.ok){alert('Export envoyé : '+all.length+' ligne(s). Le tableau de bord est à jour.');}else{alert('Erreur envoi (HTTP '+res.status+'). '+all.length+' ligne(s) récupérées mais pas envoyées.');}}catch(e){alert('Erreur réseau lors de l\\'envoi : '+e.message);}})();})();";
 
 // ---------- state ----------
 let TOKEN=null, BASE='', FLAT=[], RECEIVED=[], COLUMNS=[], VISIBLE=[], sortKey=null, sortDir=1;
@@ -799,6 +791,8 @@ async function loadData(){
     });
     // stock plants (dépôt FABRICATION) : chargé en arrière-plan, sondage auto des endpoints
     loadPlantsAuto();
+    // ordres de fabrication : endpoint REST /v2/manufacturing, chargé en arrière-plan
+    loadFabricationAuto().then(()=>{ renderFabrication(); renderHome(); });
   }catch(e){
     $('loadingBox').classList.add('hidden'); $('dashErr').textContent=e.message; $('dashErr').style.display='block';
   }
@@ -1603,33 +1597,27 @@ function renderFabrication(){
   }
   $('fabCount').textContent=rows.length+' ligne'+(rows.length>1?'s':'');
 }
-const FAB_API_URL = 'https://bms-suivi.netlify.app/api/fabrication';
-async function loadFabricationRemote(){
+const FAB_STATUS_LABEL = {new:'Nouveau', in_progress:'En cours', complete:'Terminé'};
+async function loadFabricationAuto(){
   try{
-    const res = await fetch(FAB_API_URL, {cache:'no-store'});
-    if(!res.ok) return false;
-    const json = await res.json();
-    if(!json || !Array.isArray(json.rows) || !json.rows.length) return false;
-    FAB_ROWS = json.rows; FAB_META = {exported_at: json.exported_at || null};
+    const raw = await fetchAllParallel('/v2/manufacturing', TOKEN);
+    FAB_ROWS = raw.map(r=>({
+      date: r.created_at || '',
+      reference: r.reference || '',
+      batch: r.batch_number || '',
+      sku: r.sku || '',
+      produit: r.name || '',
+      qte_a_produire: r.qty_to_produce,
+      qte_produite: r.qty_produced,
+      statut: FAB_STATUS_LABEL[r.status] || r.status || ''
+    }));
+    FAB_META = {exported_at: new Date().toISOString()};
     try{ localStorage.setItem('bms_fab_export', JSON.stringify({rows:FAB_ROWS, exported_at:FAB_META.exported_at})); }catch(e){}
     return true;
-  }catch(e){ return false; }
-}
-function handleFabFile(input){
-  const file=input.files && input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=()=>{
-    try{
-      const json=JSON.parse(reader.result);
-      const rows=json.rows || (Array.isArray(json)?json:null);
-      if(!Array.isArray(rows)) throw new Error('Format inattendu (pas de tableau "rows").');
-      FAB_ROWS=rows; FAB_META={exported_at: json.exported_at || new Date().toISOString()};
-      try{ localStorage.setItem('bms_fab_export', JSON.stringify({rows:FAB_ROWS, exported_at:FAB_META.exported_at})); }catch(e){}
-      renderFabrication();
-    }catch(e){ alert('Fichier invalide : '+e.message); }
-    input.value='';
-  };
-  reader.readAsText(file);
+  }catch(e){
+    FAB_ERR = e.message;
+    return false;
+  }
 }
 
 // ---------- events ----------
@@ -1637,24 +1625,16 @@ $('tabBtnHome').onclick=()=>switchTab('home');
 $('tabBtnReception').onclick=()=>switchTab('reception');
 $('tabBtnReceptions').onclick=()=>switchTab('receptions');
 $('tabBtnFabrication').onclick=()=>switchTab('fabrication');
-$('fabFileInput').addEventListener('change', e=>handleFabFile(e.target));
 $('fabSearch').oninput=renderFabrication;
 $('fabStatusFilter').onchange=renderFabrication;
-$('fabScriptBtn').onclick=()=>{
-  navigator.clipboard && navigator.clipboard.writeText(FAB_EXPORT_SCRIPT).then(
-    ()=>{ $('fabScriptBtn').textContent='✅ Script copié !'; setTimeout(()=>{ $('fabScriptBtn').textContent="📋 Copier le script d'export"; }, 2500); },
-    ()=>{ prompt('Copiez ce script :', FAB_EXPORT_SCRIPT); }
-  ) || prompt('Copiez ce script :', FAB_EXPORT_SCRIPT);
-};
 $('fabRefreshBtn').onclick=async()=>{
   $('fabRefreshBtn').textContent='…';
-  const ok=await loadFabricationRemote();
+  const ok=await loadFabricationAuto();
   $('fabRefreshBtn').textContent='↻ Recharger';
   renderFabrication();
-  if(!ok && !FAB_ROWS.length) alert("Rien à charger pour l'instant (aucun export envoyé, ou fonction pas encore déployée).");
+  if(!ok) alert("Erreur de chargement des ordres de fabrication"+(FAB_ERR?' : '+FAB_ERR:'')+".");
 };
 renderFabrication();
-loadFabricationRemote().then(()=>{ renderFabrication(); if(TOKEN) renderHome(); });
 $('tabBtnClients').onclick=()=>switchTab('clients');
 $('tabBtnPlants').onclick=()=>switchTab('plants');
 $('plantsSearch').oninput=renderPlants;
