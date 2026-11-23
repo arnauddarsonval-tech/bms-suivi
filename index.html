@@ -530,6 +530,7 @@ function enrichAndDetect(rawRows){
       if(!r.status) r.status=info.status;
       if(!r.po_reference) r.po_reference=info.po_reference;
       if((r.eta==null||r.eta==='')&&info.po_eta) r.eta=info.po_eta;
+      if(info.po_created_at) r.po_created_at=info.po_created_at;
       if(r.supplier_reference==null) r.supplier_reference=info.supplier_reference;
       if(r.po_comments==null) r.po_comments=info.comments;
     }
@@ -607,11 +608,12 @@ function buildGroups(rows){
   const map=new Map();
   rows.forEach(r=>{
     const key=(r.po_reference!=null && r.po_reference!=='')? String(r.po_reference) : '(sans référence)';
-    if(!map.has(key)) map.set(key,{ref:key, supplier:r.supplier_name||'', status:r.status||'', date:r.eta||'', supplier_reference:r.supplier_reference||'', comments:r.po_comments||'', items:[]});
+    if(!map.has(key)) map.set(key,{ref:key, supplier:r.supplier_name||'', status:r.status||'', date:r.eta||'', order_date:r.po_created_at||'', supplier_reference:r.supplier_reference||'', comments:r.po_comments||'', items:[]});
     const g=map.get(key); g.items.push(r);
     if(!g.supplier && r.supplier_name) g.supplier=r.supplier_name;
     if(!g.status && r.status) g.status=r.status;
     if(!g.date && r.eta) g.date=r.eta;
+    if(!g.order_date && r.po_created_at) g.order_date=r.po_created_at;
     if(!g.supplier_reference && r.supplier_reference) g.supplier_reference=r.supplier_reference;
     if(!g.comments && r.po_comments) g.comments=r.po_comments;
   });
@@ -627,7 +629,7 @@ function buildGroups(rows){
   return groups;
 }
 
-const SUMCOLS=[['date','Date prévue',0],['status','Statut',0],['ref','Réf. commande',0],['supplier','Fournisseur',0],['summary','Nature de l\'arrivage',0],['count','Lignes',1],['qty','Qté attendue',1],['value','Valeur (€)',1]];
+const SUMCOLS=[['order_date','Date de commande',0],['date','Date prévue',0],['status','Statut',0],['ref','Réf. commande',0],['supplier','Fournisseur',0],['summary','Nature de l\'arrivage',0],['count','Lignes',1],['qty','Qté attendue',1],['value','Valeur (€)',1]];
 
 function render(){
   const term=$('search').value.trim().toLowerCase();
@@ -673,6 +675,7 @@ function render(){
       const open=autoExpand||EXPANDED.has(g.ref);
       html+=`<tr class="grp${open?' open':''}" data-ref="${escAttr(g.ref)}">`
         +`<td class="tog">${open?'−':'+'}</td>`
+        +`<td>${fmtDate(g.order_date)}</td>`
         +`<td>${fmtDate(g.date)}</td>`
         +`<td>${esc(statusLabel(g.status))}</td>`
         +`<td>${esc(g.ref)}</td>`
@@ -685,7 +688,7 @@ function render(){
         +det.map(d=>`<th${d[2]?' style="text-align:right"':''}>${d[1]}</th>`).join('')+'</tr></thead><tbody>'
         +g.items.map(it=>'<tr>'+det.map(d=>{ let v=it[d[0]]; if(d[2]) return `<td class="num">${v==null||v===''?'':fmtNum(v)}</td>`; return `<td>${v==null?'':esc(v)}</td>`; }).join('')+'</tr>').join('')
         +'</tbody></table></div>';
-      html+=`<tr class="det" data-ref="${escAttr(g.ref)}"${open?'':' style="display:none"'}><td colspan="9">${sub}</td></tr>`;
+      html+=`<tr class="det" data-ref="${escAttr(g.ref)}"${open?'':' style="display:none"'}><td colspan="10">${sub}</td></tr>`;
     });
     tb.innerHTML=html;
     tb.querySelectorAll('tr.grp').forEach(tr=>{ tr.onclick=()=>{ const ref=tr.dataset.ref; if(EXPANDED.has(ref)) EXPANDED.delete(ref); else EXPANDED.add(ref); render(); }; });
@@ -743,7 +746,7 @@ async function loadData(){
       let withItems=0, totalItems=0;
       pos.forEach(po=>{
         const sname = po.supplier_name || SUP_MAP[String(po.supplier_id)] || '';
-        const info = {supplier_name:sname, status:po.status||'', po_reference:po.reference||'', po_eta:po.eta||'', supplier_reference:po.supplier_reference||'', comments:(po.public_comments||po.private_comments||'')};
+        const info = {supplier_name:sname, status:po.status||'', po_reference:po.reference||'', po_eta:po.eta||'', po_created_at:po.created_at||'', supplier_reference:po.supplier_reference||'', comments:(po.public_comments||po.private_comments||'')};
         const recDate = po.updated_at||po.eta||po.created_at||'';
         if(Array.isArray(po.items) && po.items.length){
           withItems++; totalItems+=po.items.length;
@@ -808,12 +811,12 @@ function downloadCSV(filenamePrefix, cols, rows, getVal){
 }
 function exportCSV(){
   if(!FLAT.length) return;
-  const cols=[['eta','Date prévue'],['status','Statut'],['po_reference','Réf. commande'],['supplier_name','Fournisseur'],['sku','SKU'],['name','Produit'],['qty','Qté commandée'],['qty_received','Qté reçue'],['qty_remaining','Qté restante (attendue)'],['price','Prix'],['value_remaining','Valeur (coût)']];
+  const cols=[['po_created_at','Date de commande'],['eta','Date prévue'],['status','Statut'],['po_reference','Réf. commande'],['supplier_name','Fournisseur'],['sku','SKU'],['name','Produit'],['qty','Qté commandée'],['qty_received','Qté reçue'],['qty_remaining','Qté restante (attendue)'],['price','Prix'],['value_remaining','Valeur (coût)']];
   const term=$('search').value.trim().toLowerCase(), supVal=$('supplierFilter').value, stVal=$('statusFilter').value, natVal=$('natureFilter').value;
   let groups=buildGroups(FLAT.filter(r=>passItem(r,term,supVal,stVal)));
   if(natVal) groups=groups.filter(g=>g.nature_cat===natVal);
   const rows=groups.flatMap(g=>g.items);
-  downloadCSV('commandes-fournisseurs-en-cours', cols, rows, (r,k)=> k==='eta'?fmtDate(r.eta) : k==='status'?statusLabel(r.status) : r[k]);
+  downloadCSV('commandes-fournisseurs-en-cours', cols, rows, (r,k)=> (k==='eta'||k==='po_created_at')?fmtDate(r[k]) : k==='status'?statusLabel(r.status) : r[k]);
 }
 function exportReceivedCSV(){
   if(!RECEIVED.length) return;
